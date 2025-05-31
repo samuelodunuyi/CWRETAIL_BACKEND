@@ -16,11 +16,11 @@ using Microsoft.Extensions.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 var corsAllowedOrigins = builder.Environment.IsDevelopment()
-    ? new[] {
+    ? [
         "http://localhost:9898",
         "https://localhost:9898",
         "http://localhost:5173" 
-      }
+      ]
     : builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
 
 // Add services to the container.
@@ -96,7 +96,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("VueCorsPolicy", policy =>
     {
-        policy.WithOrigins(corsAllowedOrigins)
+        policy.WithOrigins(corsAllowedOrigins!)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -134,7 +134,7 @@ builder.Services.AddAuthentication(options =>
             if (string.IsNullOrEmpty(jwtId))
                 context.Fail("Invalid token");
 
-            var isRevoked = await authService.IsTokenRevoked(jwtId);
+            var isRevoked = await authService.IsTokenRevoked(jwtId!);
             if (isRevoked)
                 context.Fail("Token revoked");
         },
@@ -192,10 +192,10 @@ app.Use(async (context, next) =>
 {
     if (context.Request.Method == "OPTIONS")
     {
-        var allowedOrigins = string.Join(",", corsAllowedOrigins);
-        context.Response.Headers.Add("Access-Control-Allow-Origin", allowedOrigins);
-        context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        var allowedOrigins = string.Join(",", corsAllowedOrigins!);
+        context.Response.Headers.Append("Access-Control-Allow-Origin", allowedOrigins);
+        context.Response.Headers.Append("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        context.Response.Headers.Append("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         context.Response.StatusCode = 200;
         return;
     }

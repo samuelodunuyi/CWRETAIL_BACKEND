@@ -7,23 +7,17 @@ namespace CWSERVER.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class CategoryController(ApiDbContext dbContext) : ControllerBase
     {
-        private readonly ApiDbContext dbContext;
+        private readonly ApiDbContext dbContext = dbContext;
 
-        public CategoryController(ApiDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
-
-      
         [HttpGet]
         public IActionResult GetAllCategories([FromQuery] string? name)
         {
             var query = dbContext.Categories.AsQueryable();
 
             if (!string.IsNullOrEmpty(name))
-                query = query.Where(c => c.CategoryName.Contains(name));
+                query = query.Where(c => c.CategoryName!.Contains(name));
 
             return Ok(query.ToList());
         }

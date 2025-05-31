@@ -19,26 +19,19 @@ namespace CWSERVER.Services
         Task<bool> IsTokenRevoked(string jwtId);
     }
 
-    public class AuthService : IAuthService
+    public class AuthService(
+        ApiDbContext context,
+        UserManager<User> userManager,
+        IConfiguration config) : IAuthService
     {
-        private readonly ApiDbContext _context;
-        private readonly UserManager<User> _userManager;
-        private readonly IConfiguration _config;
-
-        public AuthService(
-            ApiDbContext context,
-            UserManager<User> userManager,
-            IConfiguration config)
-        {
-            _context = context;
-            _userManager = userManager;
-            _config = config;
-        }
+        private readonly ApiDbContext _context = context;
+        private readonly UserManager<User> _userManager = userManager;
+        private readonly IConfiguration _config = config;
 
         public async Task<TokenResponse> LoginAsync(LoginRequest request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
+            var user = await _userManager.FindByEmailAsync(request.Email!);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password!))
                 throw new UnauthorizedAccessException("Invalid credentials");
 
             if (!user.IsActive)
@@ -51,7 +44,7 @@ namespace CWSERVER.Services
         {
             var principal = GetPrincipalFromExpiredToken(accessTokenFromHeader);
             var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId!);
 
             if (user == null || !user.IsActive)
                 throw new UnauthorizedAccessException("Invalid user");
@@ -131,14 +124,14 @@ namespace CWSERVER.Services
         {
             var authClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim(JwtRegisteredClaimNames.Jti, jwtId),
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email)
+                new(ClaimTypes.NameIdentifier, user.Id),
+                new(ClaimTypes.Email, user.Email!),
+                new(ClaimTypes.Role, user.Role),
+                new(JwtRegisteredClaimNames.Jti, jwtId),
+                new(JwtRegisteredClaimNames.Sub, user.Email!)
             };
 
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtConfig:Key"]));
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtConfig:Key"]!));
 
             var token = new JwtSecurityToken(
                 issuer: _config["JwtConfig:Issuer"],

@@ -9,14 +9,14 @@ namespace CWSERVER.Models.Entities
 
         [ForeignKey("Store")]
         public int StoreId { get; set; }
-        public virtual Store Store { get; set; }
+        public virtual Store? Store { get; set; }
 
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
-        public virtual Customer Customer { get; set; }
+        public virtual Customer? Customer { get; set; }
 
         public string Status { get; set; } = "Pending";
-        public string CreatedBy { get; set; } 
+        public string? CreatedBy { get; set; } 
 
         public DateTime? LastUpdatedAt { get; set; } = DateTime.UtcNow;
         public string? LastUpdatedBy { get; set; }

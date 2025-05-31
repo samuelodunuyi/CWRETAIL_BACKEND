@@ -6,7 +6,7 @@ namespace CWSERVER.Models.Entities
     {
         public int StoreId { get; set; }
         [Required]
-        public string StoreName { get; set; }
+        public string? StoreName { get; set; }
 
         public string? StoreRep { get; set; }
     }

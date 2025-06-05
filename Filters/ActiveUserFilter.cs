@@ -6,14 +6,9 @@ using CWSERVER.Models.Entities;
 
 namespace CWSERVER.Filters
 {
-    public class ActiveUserFilter : IAsyncActionFilter
+    public class ActiveUserFilter(UserManager<User> userManager) : IAsyncActionFilter
     {
-        private readonly UserManager<User> _userManager;
-
-        public ActiveUserFilter(UserManager<User> userManager)
-        {
-            _userManager = userManager;
-        }
+        private readonly UserManager<User> _userManager = userManager;
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {

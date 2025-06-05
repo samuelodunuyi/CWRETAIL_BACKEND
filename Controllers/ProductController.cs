@@ -12,21 +12,14 @@ namespace CWSERVER.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController(
+        ApiDbContext dbContext,
+        IWebHostEnvironment hostingEnvironment,
+        IHttpContextAccessor httpContextAccessor) : ControllerBase
     {
-        private readonly ApiDbContext dbContext;
-        private readonly IWebHostEnvironment hostingEnvironment;
-        private readonly IHttpContextAccessor httpContextAccessor;
-
-        public ProductController(
-            ApiDbContext dbContext,
-            IWebHostEnvironment hostingEnvironment,
-            IHttpContextAccessor httpContextAccessor)
-        {
-            this.dbContext = dbContext;
-            this.hostingEnvironment = hostingEnvironment;
-            this.httpContextAccessor = httpContextAccessor;
-        }
+        private readonly ApiDbContext dbContext = dbContext;
+        private readonly IWebHostEnvironment hostingEnvironment = hostingEnvironment;
+        private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
 
         private string SaveImageAndGetPath(IFormFile imageFile, int productId)
         {
@@ -44,7 +37,8 @@ namespace CWSERVER.Controllers
                 imageFile.CopyTo(fileStream);
             }
 
-            var request = httpContextAccessor.HttpContext.Request;
+            var httpContext = httpContextAccessor.HttpContext ?? throw new InvalidOperationException("HttpContext is null.");
+            var request = httpContext.Request;
             var baseUrl = $"{request.Scheme}://{request.Host}{request.PathBase}";
             var relativePath = Path.Combine("images", "products", productId.ToString(), uniqueFileName).Replace("\\", "/");
 
@@ -92,7 +86,7 @@ namespace CWSERVER.Controllers
                 StoreId = p.StoreId,
                 StoreName = p.Store?.StoreName,
                 MainImageUrl = p.MainImagePath,
-                AdditionalImageUrls = p.AdditionalImages.Select(i => i.ImagePath).ToList(),
+                AdditionalImageUrls = [.. p.AdditionalImages.Select(i => i.ImagePath)],
                 ProductLabel = p.ProductLabel,
                 ProductAmountInStock = p.ProductAmountInStock,
                 ProductPrice = p.ProductPrice,
@@ -125,7 +119,7 @@ namespace CWSERVER.Controllers
                 StoreId = product.StoreId,
                 StoreName = product.Store?.StoreName,
                 MainImageUrl = product.MainImagePath,
-                AdditionalImageUrls = product.AdditionalImages.Select(i => i.ImagePath).ToList(),
+                AdditionalImageUrls = [..product.AdditionalImages.Select(i => i.ImagePath)],
                 ProductLabel = product.ProductLabel,
                 ProductAmountInStock = product.ProductAmountInStock,
                 ProductPrice = product.ProductPrice,
@@ -139,9 +133,7 @@ namespace CWSERVER.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromForm] ProductCreateDTO productDto,
-            [FromForm] IFormFile? mainImage,
-            [FromForm] List<IFormFile>? additionalImages)
+        public async Task<IActionResult> CreateProduct(ProductCreateDTO productDto, IFormFile? mainImage, List<IFormFile>? additionalImages)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -170,7 +162,7 @@ namespace CWSERVER.Controllers
             }
 
             
-            if (additionalImages != null && additionalImages.Any())
+            if (additionalImages != null && additionalImages.Count != 0)
             {
                 foreach (var image in additionalImages)
                 {
@@ -186,9 +178,7 @@ namespace CWSERVER.Controllers
 
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromForm] ProductCreateDTO productDto,
-            [FromForm] IFormFile? mainImage,
-            [FromForm] List<IFormFile>? additionalImages)
+        public async Task<IActionResult> UpdateProduct(int id, ProductCreateDTO productDto, IFormFile? mainImage, List<IFormFile>? additionalImages)
         {
             var product = await dbContext.Products
                 .Include(p => p.AdditionalImages)

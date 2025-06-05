@@ -7,7 +7,7 @@ namespace CWSERVER.Models.Entities
     {
         public int ProductId { get; set; }
         [Required]
-        public string ProductName { get; set; }
+        public string? ProductName { get; set; }
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
         public virtual Category? Category { get; set; }
@@ -20,7 +20,9 @@ namespace CWSERVER.Models.Entities
         public virtual ICollection<ProductImage> AdditionalImages { get; set; } = new List<ProductImage>();
         public string? ProductLabel { get; set; }
         public int ProductAmountInStock { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal ProductPrice { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? ProductOriginalPrice { get; set; }
         public string? ProductDescription { get; set; }
         [Required]
@@ -30,8 +32,8 @@ namespace CWSERVER.Models.Entities
     public class ProductImage
     {
         public int Id { get; set; }
-        public string ImagePath { get; set; }
+        public string? ImagePath { get; set; }
         public int ProductId { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual Product? Product { get; set; }
     }
 }

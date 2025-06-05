@@ -10,16 +10,10 @@ namespace CWSERVER.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController(IAuthService authService, UserManager<User> userManager) : ControllerBase
     {
-        private readonly IAuthService _authService;
-        private readonly UserManager<User> _userManager;
-
-        public AuthController(IAuthService authService, UserManager<User> userManager)
-        {
-            _authService = authService;
-            _userManager = userManager;
-        }
+        private readonly IAuthService _authService = authService;
+        private readonly UserManager<User> _userManager = userManager;
 
         [HttpPost("token")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
@@ -40,10 +34,10 @@ namespace CWSERVER.Controllers
         {
             try
             {
-                var authHeader = HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+                var authHeader = HttpContext.Request.Headers.Authorization.FirstOrDefault();
                 var accessToken = authHeader?.Split(' ').Last(); 
 
-                var tokens = await _authService.RefreshTokenAsync(request.RefreshToken, accessToken);
+                var tokens = await _authService.RefreshTokenAsync(request.RefreshToken!, accessToken!);
                 return Ok(tokens);
             }
             catch (UnauthorizedAccessException ex)
@@ -57,7 +51,7 @@ namespace CWSERVER.Controllers
         public async Task<IActionResult> Logout()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await _authService.LogoutAsync(userId);
+            await _authService.LogoutAsync(userId!);
             return NoContent();
         }
     }

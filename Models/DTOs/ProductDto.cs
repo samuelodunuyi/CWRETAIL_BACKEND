@@ -2,7 +2,7 @@
 {
     public class ProductCreateDTO
     {
-        public string ProductName { get; set; }
+        public string? ProductName { get; set; }
         public int CategoryId { get; set; }
         public int StoreId { get; set; }
         public string? ProductLabel { get; set; }
@@ -17,7 +17,7 @@
     public class ProductResponseDTO
     {
         public int ProductId { get; set; }
-        public string ProductName { get; set; }
+        public string? ProductName { get; set; }
         public int CategoryId { get; set; }
         public string? CategoryName { get; set; }
         public int StoreId { get; set; }

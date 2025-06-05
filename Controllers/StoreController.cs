@@ -7,14 +7,9 @@ namespace CWSERVER.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StoreController : ControllerBase
+    public class StoreController(ApiDbContext dbContext) : ControllerBase
     {
-        private readonly ApiDbContext dbContext;
-
-        public StoreController(ApiDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
+        private readonly ApiDbContext dbContext = dbContext;
 
         [HttpGet]
         public IActionResult GetAllStores([FromQuery] string? name)
@@ -22,7 +17,7 @@ namespace CWSERVER.Controllers
             var query = dbContext.Stores.AsQueryable();
 
             if (!string.IsNullOrEmpty(name))
-                query = query.Where(s => s.StoreName.Contains(name));
+                query = query.Where(s => s.StoreName!.Contains(name));
 
             return Ok(query.ToList());
         }

@@ -8,20 +8,20 @@ namespace CWSERVER.Models.Entities
         public int Id { get; set; }
 
         [Required]
-        public string UserId { get; set; }
-        public virtual User User { get; set; }
+        public string? UserId { get; set; }
+        public virtual User? User { get; set; }
 
         [ForeignKey("Store")]
         public int StoreId { get; set; }
-        public virtual Store Store { get; set; }
+        public virtual Store? Store { get; set; }
 
         [Required]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
         [Required]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
         [Required]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
     }
 }

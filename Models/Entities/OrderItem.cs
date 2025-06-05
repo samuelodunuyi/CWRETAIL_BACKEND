@@ -8,15 +8,18 @@ namespace CWSERVER.Models.Entities
 
         [ForeignKey("Order")]
         public int OrderId { get; set; }
-        public virtual Order Order { get; set; }
+        public virtual Order? Order { get; set; }
 
         public int ProductId { get; set; }
 
-        public string ProductName { get; set; }
+        public string? ProductName { get; set; }
         public string? ProductDescription { get; set; }
         public string? ProductCategory { get; set; }
+        [Column(TypeName="decimal(18, 2)")]
         public decimal PriceAtOrder { get; set; }
+        [Column(TypeName="decimal(18, 2)")]
         public decimal? OriginalPriceAtOrder { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public int Quantity { get; set; }
         public string? ProductImageUrl { get; set; } 
     }

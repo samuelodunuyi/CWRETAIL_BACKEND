@@ -11,14 +11,9 @@ namespace CWSERVER.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class OrderController : ControllerBase
+    public class OrderController(ApiDbContext context) : ControllerBase
     {
-        private readonly ApiDbContext _context;
-
-        public OrderController(ApiDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApiDbContext _context = context;
 
         [HttpGet]
         public async Task<IActionResult> GetOrders()

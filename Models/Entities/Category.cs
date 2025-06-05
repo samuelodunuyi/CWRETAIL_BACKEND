@@ -7,6 +7,6 @@ namespace CWSERVER.Models.Entities
         public int CategoryId { get; set; }
         public string? CategoryIcon { get; set; }
         [Required]
-        public string CategoryName { get; set; }
+        public string? CategoryName { get; set; }
     }
 }

@@ -12,22 +12,14 @@ namespace CWSERVER.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CustomerController : ControllerBase
+    public class CustomerController(ApiDbContext context, UserManager<User> userManager) : ControllerBase
     {
-        private readonly ApiDbContext _context;
-        private readonly UserManager<User> _userManager;
-
-        public CustomerController(ApiDbContext context, UserManager<User> userManager)
-        {
-            _context = context;
-            _userManager = userManager;
-        }
+        private readonly ApiDbContext _context = context;
+        private readonly UserManager<User> _userManager = userManager;
 
         [HttpGet]
         [Authorize(Roles = "Admin,Employee,StoreRep")]
-        public async Task<IActionResult> GetAllCustomers(
-    [FromQuery] string? email,
-    [FromQuery] string? search) 
+        public async Task<IActionResult> GetAllCustomers([FromQuery] string? email, [FromQuery] string? search) 
         {
             var query = _context.Customers.AsQueryable();
 
@@ -41,9 +33,9 @@ namespace CWSERVER.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(c =>
-                    c.Email.Contains(search) ||
-                    c.FirstName.Contains(search) ||
-                    c.LastName.Contains(search));
+                    c.Email!.Contains(search) ||
+                    c.FirstName!.Contains(search) ||
+                    c.LastName!.Contains(search));
             }
 
            
@@ -52,7 +44,7 @@ namespace CWSERVER.Controllers
                 var employee = await GetCurrentEmployee();
                 if (employee == null) return Forbid();
 
-                query = query.Where(c => c.CreatedBy == employee.User.Email || c.UserId == null);
+                query = query.Where(c => c.CreatedBy == employee.User!.Email || c.UserId == null);
             }
 
             var customers = await query.ToListAsync();
@@ -102,8 +94,7 @@ namespace CWSERVER.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-           
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 var currentUser = await _userManager.GetUserAsync(User);
                 customer.CreatedBy = currentUser?.Email;
@@ -134,7 +125,7 @@ namespace CWSERVER.Controllers
             else if (User.IsInRole("Employee") || User.IsInRole("StoreRep"))
             {
                 var employee = await GetCurrentEmployee();
-                if (employee == null || (existingCustomer.CreatedBy != employee.User.Email && existingCustomer.UserId != null))
+                if (employee == null || (existingCustomer.CreatedBy != employee.User!.Email && existingCustomer.UserId != null))
                     return Forbid();
             }
 
@@ -157,9 +148,11 @@ namespace CWSERVER.Controllers
             return NoContent();
         }
 
-        private async Task<Employee> GetCurrentEmployee()
+        private async Task<Employee?> GetCurrentEmployee()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return null; 
+
             return await _context.Employees
                 .Include(e => e.User)
                 .FirstOrDefaultAsync(e => e.UserId == userId);

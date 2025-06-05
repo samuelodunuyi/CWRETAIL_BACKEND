@@ -5,12 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CWSERVER.Data
 {
-    public class ApiDbContext : IdentityDbContext<User>
+    public class ApiDbContext(DbContextOptions options) : IdentityDbContext<User>(options)
     {
-        public ApiDbContext(DbContextOptions options) : base(options)
-        {
-        }
-
         public DbSet<Store> Stores { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -36,13 +32,30 @@ namespace CWSERVER.Data
             modelBuilder.Entity<Product>()
                 .Property(p => p.ProductId)
                 .UseIdentityColumn(seed: 100000, increment: 1);
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.ProductPrice)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.ProductOriginalPrice)
+                .HasPrecision(18, 2);
+
             modelBuilder.Entity<ProductImage>().ToTable("ProductImage");
+
             modelBuilder.Entity<ProductImage>()
                 .HasOne(pi => pi.Product)
                 .WithMany(p => p.AdditionalImages)
                 .HasForeignKey(pi => pi.ProductId);
 
-           
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.OriginalPriceAtOrder)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.PriceAtOrder)
+                .HasPrecision(18, 2);
+
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<IdentityRole>().ToTable("Role");
             modelBuilder.Entity<IdentityUserRole<string>>().ToTable("UserRole");

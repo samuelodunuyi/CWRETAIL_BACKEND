@@ -25,7 +25,7 @@ namespace CWSERVER.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            var userExists = await _userManager.FindByEmailAsync(request.Email);
+            var userExists = await _userManager.FindByEmailAsync(request.Email!);
             if (userExists != null)
                 return BadRequest("User already exists");
 
@@ -57,7 +57,7 @@ namespace CWSERVER.Controllers
                 LastUpdatedAt = DateTime.UtcNow
             };
 
-            var result = await _userManager.CreateAsync(user, request.Password);
+            var result = await _userManager.CreateAsync(user, request.Password!);
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
@@ -84,7 +84,7 @@ namespace CWSERVER.Controllers
         [HttpPost("register-employee")]
         public async Task<IActionResult> RegisterEmployee([FromBody] RegisterEmployeeRequest request)
         {
-            var userExists = await _userManager.FindByEmailAsync(request.Email);
+            var userExists = await _userManager.FindByEmailAsync(request.Email!);
             if (userExists != null)
                 return BadRequest("User already exists");
 
@@ -104,7 +104,7 @@ namespace CWSERVER.Controllers
                 LastUpdatedBy = currentUser.Email
             };
 
-            var result = await _userManager.CreateAsync(user, request.Password);
+            var result = await _userManager.CreateAsync(user, request.Password!);
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
@@ -132,7 +132,7 @@ namespace CWSERVER.Controllers
         public async Task<IActionResult> GetCurrentUserData()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId!);
 
             if (user == null)
                 return NotFound("User not found");

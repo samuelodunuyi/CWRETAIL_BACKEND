@@ -23,7 +23,9 @@ namespace CWSERVER.Controllers
 
         private string SaveImageAndGetPath(IFormFile imageFile, int productId)
         {
-            var uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images", "products", productId.ToString());
+            //var uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images", "products", productId.ToString());
+            var uploadsFolder = Path.Combine("D:\\home\\site\\wwwroot", "images", "products", productId.ToString());
+
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);

@@ -26,6 +26,10 @@ var corsAllowedOrigins = builder.Environment.IsDevelopment()
 // Add services to the container.
 builder.Services.AddControllers();
 
+
+builder.WebHost.UseWebRoot("wwwroot");
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -184,6 +188,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("VueCorsPolicy");
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

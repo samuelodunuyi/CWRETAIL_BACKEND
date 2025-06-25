@@ -132,8 +132,13 @@ namespace CWSERVER.Controllers
         }
 
         [Authorize]
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(ProductCreateDTO productDto, IFormFile? mainImage, List<IFormFile>? additionalImages)
+        public async Task<IActionResult> CreateProduct(
+            [FromForm] ProductCreateDTO productDto,
+            [FromForm] IFormFile? mainImage,
+            [FromForm] List<IFormFile>? additionalImages)
+
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -173,7 +178,24 @@ namespace CWSERVER.Controllers
 
             await dbContext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProductById), new { id = product.ProductId }, product);
+            var response = new ProductResponseDTO
+            {
+                ProductId = product.ProductId,
+                ProductName = product.ProductName,
+                CategoryId = product.CategoryId,
+                StoreId = product.StoreId,
+                MainImageUrl = product.MainImagePath,
+                AdditionalImageUrls = product.AdditionalImages.Select(i => i.ImagePath).ToList(),
+                ProductLabel = product.ProductLabel,
+                ProductAmountInStock = product.ProductAmountInStock,
+                ProductPrice = product.ProductPrice,
+                ProductOriginalPrice = product.ProductOriginalPrice,
+                ProductDescription = product.ProductDescription,
+                ProductSKU = product.ProductSKU
+            };
+
+            return CreatedAtAction(nameof(GetProductById), new { id = product.ProductId }, response);
+
         }
 
         [Authorize]

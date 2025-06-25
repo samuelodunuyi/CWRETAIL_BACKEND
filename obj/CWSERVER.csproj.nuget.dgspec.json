@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\USER\\Source\\Repos\\CW_RETAIL\\CWSERVER.csproj": {}
+    "C:\\Users\\3ples\\Documents\\__CODEWARE__\\__NEW__\\CW_RETAIL_BACKEND\\CWSERVER.csproj": {}
   },
   "projects": {
-    "C:\\Users\\USER\\Source\\Repos\\CW_RETAIL\\CWSERVER.csproj": {
+    "C:\\Users\\3ples\\Documents\\__CODEWARE__\\__NEW__\\CW_RETAIL_BACKEND\\CWSERVER.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\USER\\Source\\Repos\\CW_RETAIL\\CWSERVER.csproj",
+        "projectUniqueName": "C:\\Users\\3ples\\Documents\\__CODEWARE__\\__NEW__\\CW_RETAIL_BACKEND\\CWSERVER.csproj",
         "projectName": "CWSERVER",
-        "projectPath": "C:\\Users\\USER\\Source\\Repos\\CW_RETAIL\\CWSERVER.csproj",
-        "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\USER\\Source\\Repos\\CW_RETAIL\\obj\\",
+        "projectPath": "C:\\Users\\3ples\\Documents\\__CODEWARE__\\__NEW__\\CW_RETAIL_BACKEND\\CWSERVER.csproj",
+        "packagesPath": "C:\\Users\\3ples\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\3ples\\Documents\\__CODEWARE__\\__NEW__\\CW_RETAIL_BACKEND\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\3ples\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

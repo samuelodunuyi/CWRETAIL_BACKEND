@@ -127,7 +127,6 @@ namespace CWSERVER.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CustomerId")
@@ -170,9 +169,11 @@ namespace CWSERVER.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal?>("OriginalPriceAtOrder")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<decimal>("PriceAtOrder")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("ProductCategory")
@@ -188,7 +189,6 @@ namespace CWSERVER.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Quantity")
@@ -229,9 +229,11 @@ namespace CWSERVER.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("ProductOriginalPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<decimal>("ProductPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("ProductSKU")
@@ -259,7 +261,6 @@ namespace CWSERVER.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
@@ -293,15 +294,12 @@ namespace CWSERVER.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("JwtId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Token")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

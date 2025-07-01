@@ -12,14 +12,18 @@ namespace CWSERVER.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController(
-        ApiDbContext dbContext,
-        IWebHostEnvironment hostingEnvironment,
-        IHttpContextAccessor httpContextAccessor) : ControllerBase
+    public class ProductController : ControllerBase
     {
-        private readonly ApiDbContext dbContext = dbContext;
-        private readonly IWebHostEnvironment hostingEnvironment = hostingEnvironment;
-        private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
+        private readonly ApiDbContext dbContext;
+        private readonly IWebHostEnvironment hostingEnvironment;
+        private readonly IHttpContextAccessor httpContextAccessor;
+
+        public ProductController(ApiDbContext dbContext, IWebHostEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
+        {
+            this.dbContext = dbContext;
+            this.hostingEnvironment = hostingEnvironment;
+            this.httpContextAccessor = httpContextAccessor;
+        }
 
         private string SaveImageAndGetPath(IFormFile imageFile, int productId)
         {
@@ -47,15 +51,55 @@ namespace CWSERVER.Controllers
             return $"{baseUrl}/{relativePath}";
         }
 
+
+        private async Task<ProductResponseDTO> MapProductAsync(Product product)
+        {
+            var full = await dbContext.Products
+                .Include(p => p.Category)
+                .Include(p => p.Store)
+                .Include(p => p.AdditionalImages)
+                .FirstAsync(p => p.ProductId == product.ProductId);
+
+            return new ProductResponseDTO
+            {
+                ProductId = full.ProductId,
+                ProductName = full.ProductName,
+                CategoryId = full.CategoryId,
+                CategoryName = full.Category?.CategoryName,
+                StoreId = full.StoreId,
+                StoreName = full.Store?.StoreName,
+                MainImageUrl = full.MainImagePath,
+                AdditionalImages = full.AdditionalImages
+                    .Select(i => new ProductImageDTO
+                    {
+                        Id = i.Id,
+                        ImageUrl = i.ImagePath ?? ""
+                    })
+                    .ToList(),
+                ProductLabel = full.ProductLabel,
+                ProductAmountInStock = full.ProductAmountInStock,
+                ProductPrice = full.ProductPrice,
+                ProductOriginalPrice = full.ProductOriginalPrice,
+                ProductDescription = full.ProductDescription,
+                ProductSKU = full.ProductSKU,
+                LowStockWarningCount = full.LowStockWarningCount,
+                Status = full.Status
+            };
+        }
+
+
+
+
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllProducts(
-    [FromQuery] int? categoryId,
-    [FromQuery] int? storeId,
-    [FromQuery] decimal? productPriceFrom,
-    [FromQuery] decimal? productPriceTo,
-    [FromQuery] string? productSKU,
-    [FromQuery] string? active)
+        [FromQuery] int? categoryId,
+        [FromQuery] int? storeId,
+        [FromQuery] decimal? productPriceFrom,
+        [FromQuery] decimal? productPriceTo,
+        [FromQuery] string? productSKU,
+        [FromQuery] string? active)
         {
             var query = dbContext.Products
                                  .Include(p => p.Category)
@@ -82,7 +126,6 @@ namespace CWSERVER.Controllers
                 query = query.Where(p => p.Status == true);
             else if (active.ToLower() == "false")
                 query = query.Where(p => p.Status == false);
-            // else if active == "all", include all statuses
 
             var filteredProducts = query.ToList();
 
@@ -95,17 +138,26 @@ namespace CWSERVER.Controllers
                 StoreId = p.StoreId,
                 StoreName = p.Store?.StoreName,
                 MainImageUrl = p.MainImagePath,
-                AdditionalImageUrls = p.AdditionalImages.Select(i => i.ImagePath).ToList(),
+                AdditionalImages = p.AdditionalImages.Select(i => new ProductImageDTO
+                {
+                    Id = i.Id,
+                    ImageUrl = i.ImagePath ?? ""
+                }).ToList(),
                 ProductLabel = p.ProductLabel,
                 ProductAmountInStock = p.ProductAmountInStock,
                 ProductPrice = p.ProductPrice,
                 ProductOriginalPrice = p.ProductOriginalPrice,
                 ProductDescription = p.ProductDescription,
-                ProductSKU = p.ProductSKU
+                ProductSKU = p.ProductSKU,
+                Status = p.Status,
+                LowStockWarningCount = p.LowStockWarningCount,
+
             });
 
             return Ok(response);
         }
+
+
 
         [AllowAnonymous]
         [HttpGet("{id}")]
@@ -128,17 +180,25 @@ namespace CWSERVER.Controllers
                 StoreId = product.StoreId,
                 StoreName = product.Store?.StoreName,
                 MainImageUrl = product.MainImagePath,
-                AdditionalImageUrls = [..product.AdditionalImages.Select(i => i.ImagePath)],
+                AdditionalImages = product.AdditionalImages.Select(i => new ProductImageDTO
+                {
+                    Id = i.Id,
+                    ImageUrl = i.ImagePath ?? ""
+                }).ToList(),
                 ProductLabel = product.ProductLabel,
                 ProductAmountInStock = product.ProductAmountInStock,
                 ProductPrice = product.ProductPrice,
                 ProductOriginalPrice = product.ProductOriginalPrice,
                 ProductDescription = product.ProductDescription,
-                ProductSKU = product.ProductSKU
+                ProductSKU = product.ProductSKU,
+                Status = product.Status,
+                LowStockWarningCount = product.LowStockWarningCount,
             };
 
             return Ok(response);
         }
+
+
 
         [Authorize]
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -192,18 +252,26 @@ namespace CWSERVER.Controllers
                 ProductId = product.ProductId,
                 ProductName = product.ProductName,
                 CategoryId = product.CategoryId,
+                CategoryName = product.Category?.CategoryName,
                 StoreId = product.StoreId,
+                StoreName = product.Store?.StoreName,
                 MainImageUrl = product.MainImagePath,
-                AdditionalImageUrls = product.AdditionalImages.Select(i => i.ImagePath).ToList(),
+                AdditionalImages = product.AdditionalImages.Select(i => new ProductImageDTO
+                {
+                    Id = i.Id,
+                    ImageUrl = i.ImagePath ?? ""
+                }).ToList(),
                 ProductLabel = product.ProductLabel,
                 ProductAmountInStock = product.ProductAmountInStock,
                 ProductPrice = product.ProductPrice,
                 ProductOriginalPrice = product.ProductOriginalPrice,
                 ProductDescription = product.ProductDescription,
-                ProductSKU = product.ProductSKU
+                ProductSKU = product.ProductSKU,
+                Status = product.Status,
+                LowStockWarningCount = product.LowStockWarningCount,
             };
 
-            return CreatedAtAction(nameof(GetProductById), new { id = product.ProductId }, response);
+            return Ok(response);
 
         }
 
@@ -212,10 +280,10 @@ namespace CWSERVER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(
-            int id,
-            [FromForm] ProductCreateDTO productDto,
-            [FromForm] IFormFile? mainImage,
-            [FromForm] List<IFormFile>? additionalImages)
+        int id,
+        [FromForm] ProductCreateDTO productDto,
+        [FromForm] IFormFile? mainImage,
+        [FromForm] List<IFormFile>? additionalImages)
         {
             var product = await dbContext.Products
                 .Include(p => p.AdditionalImages)
@@ -224,7 +292,7 @@ namespace CWSERVER.Controllers
             if (product == null)
                 return NotFound();
 
-            product.ProductName = productDto.ProductName;
+            product.ProductName = productDto.ProductName ?? "";
             product.CategoryId = productDto.CategoryId;
             product.StoreId = productDto.StoreId;
             product.ProductLabel = productDto.ProductLabel;
@@ -232,7 +300,7 @@ namespace CWSERVER.Controllers
             product.ProductPrice = productDto.ProductPrice;
             product.ProductOriginalPrice = productDto.ProductOriginalPrice;
             product.ProductDescription = productDto.ProductDescription;
-            product.ProductSKU = productDto.ProductSKU;
+            product.ProductSKU = productDto.ProductSKU ?? "";
             product.LowStockWarningCount = productDto.LowStockWarningCount;
             product.Status = productDto.Status;
 
@@ -242,8 +310,16 @@ namespace CWSERVER.Controllers
                 product.MainImagePath = imagePath;
             }
 
+            // Replace all additional images
+            if (product.AdditionalImages.Any())
+            {
+                dbContext.RemoveRange(product.AdditionalImages);
+            }
+
             if (additionalImages != null && additionalImages.Any())
             {
+                product.AdditionalImages = new List<ProductImage>();
+
                 foreach (var image in additionalImages)
                 {
                     var imagePath = SaveImageAndGetPath(image, product.ProductId);
@@ -252,18 +328,22 @@ namespace CWSERVER.Controllers
             }
 
             await dbContext.SaveChangesAsync();
+            var result = await MapProductAsync(product);
+            return Ok(result);
 
-            return NoContent();
         }
+
+
+
 
         [Authorize]
         [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchProduct(
-            int id,
-            [FromForm] ProductCreateDTO productDto,
-            [FromForm] IFormFile? mainImage,
-            [FromForm] List<IFormFile>? additionalImages)
+        int id,
+        [FromForm] ProductCreateDTO productDto,
+        [FromForm] IFormFile? mainImage,
+        [FromForm] List<IFormFile>? additionalImages)
         {
             var product = await dbContext.Products
                 .Include(p => p.AdditionalImages)
@@ -272,15 +352,15 @@ namespace CWSERVER.Controllers
             if (product == null)
                 return NotFound();
 
-            if (productDto.ProductName != null) product.ProductName = productDto.ProductName;
+            if (!string.IsNullOrEmpty(productDto.ProductName)) product.ProductName = productDto.ProductName;
             if (productDto.CategoryId != 0) product.CategoryId = productDto.CategoryId;
             if (productDto.StoreId != 0) product.StoreId = productDto.StoreId;
-            if (productDto.ProductLabel != null) product.ProductLabel = productDto.ProductLabel;
+            if (!string.IsNullOrEmpty(productDto.ProductLabel)) product.ProductLabel = productDto.ProductLabel;
             if (productDto.ProductAmountInStock != 0) product.ProductAmountInStock = productDto.ProductAmountInStock;
             if (productDto.ProductPrice != 0) product.ProductPrice = productDto.ProductPrice;
-            if (productDto.ProductOriginalPrice != null) product.ProductOriginalPrice = productDto.ProductOriginalPrice;
-            if (productDto.ProductDescription != null) product.ProductDescription = productDto.ProductDescription;
-            if (productDto.ProductSKU != null) product.ProductSKU = productDto.ProductSKU;
+            if (productDto.ProductOriginalPrice.HasValue) product.ProductOriginalPrice = productDto.ProductOriginalPrice;
+            if (!string.IsNullOrEmpty(productDto.ProductDescription)) product.ProductDescription = productDto.ProductDescription;
+            if (!string.IsNullOrEmpty(productDto.ProductSKU)) product.ProductSKU = productDto.ProductSKU;
 
             product.LowStockWarningCount = productDto.LowStockWarningCount;
             product.Status = productDto.Status;
@@ -291,6 +371,28 @@ namespace CWSERVER.Controllers
                 product.MainImagePath = imagePath;
             }
 
+            // Delete specific additional images
+            if (productDto.DeleteImageIds != null && productDto.DeleteImageIds.Any())
+            {
+                var imagesToDelete = product.AdditionalImages
+                    .Where(img => productDto.DeleteImageIds.Contains(img.Id))
+                    .ToList();
+
+                foreach (var image in imagesToDelete)
+                {
+                    if (!string.IsNullOrEmpty(image.ImagePath))
+                    {
+                        var fullPath = Path.Combine(hostingEnvironment.WebRootPath, image.ImagePath.Replace("/", "\\").Split("wwwroot\\").Last());
+                        if (System.IO.File.Exists(fullPath))
+                            System.IO.File.Delete(fullPath);
+                    }
+
+                    product.AdditionalImages.Remove(image);
+                    dbContext.ProductImages.Remove(image);
+                }
+            }
+
+            // Add new additional images
             if (additionalImages != null && additionalImages.Any())
             {
                 foreach (var image in additionalImages)
@@ -301,9 +403,12 @@ namespace CWSERVER.Controllers
             }
 
             await dbContext.SaveChangesAsync();
+            var result = await MapProductAsync(product);
+            return Ok(result);
 
-            return NoContent();
         }
+
+
 
 
 

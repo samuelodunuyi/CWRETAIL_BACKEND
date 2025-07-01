@@ -8,7 +8,7 @@ namespace CWSERVER.Models.Entities
         public int ProductId { get; set; }
 
         [Required]
-        public string? ProductName { get; set; }
+        public string ProductName { get; set; } = string.Empty;
 
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
@@ -33,11 +33,12 @@ namespace CWSERVER.Models.Entities
         public string? ProductDescription { get; set; }
 
         [Required]
-        public string? ProductSKU { get; set; }
+        public string ProductSKU { get; set; } = string.Empty;
 
         public int LowStockWarningCount { get; set; } = 0;
-        public bool Status { get; set; } = true; // true = active, false = inactive
+        public bool Status { get; set; } = true;
     }
+
 
     public class ProductImage
     {

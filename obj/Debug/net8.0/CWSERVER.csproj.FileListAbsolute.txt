@@ -520,7 +520,6 @@ C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0
 C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0\CWSERVER.csproj.Up2Date
 C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0\CWSERVER.dll
 C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0\refint\CWSERVER.dll
@@ -528,3 +527,4 @@ C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0
 C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0\CWSERVER.genruntimeconfig.cache
 C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0\ref\CWSERVER.dll
 C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\bin\Debug\net8.0\CWSERVER.staticwebassets.runtime.json
+C:\Users\3ples\Documents\__CODEWARE__\__NEW__\CW_RETAIL_BACKEND\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

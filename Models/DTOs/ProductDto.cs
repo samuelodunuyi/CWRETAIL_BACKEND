@@ -11,7 +11,9 @@
         public decimal? ProductOriginalPrice { get; set; }
         public string? ProductDescription { get; set; }
         public string? ProductSKU { get; set; }
-       
+        public int LowStockWarningCount { get; set; } = 0;
+        public bool Status { get; set; } = true;
+
     }
 
     public class ProductResponseDTO

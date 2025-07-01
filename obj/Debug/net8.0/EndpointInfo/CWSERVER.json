@@ -644,6 +644,13 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "active",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -669,36 +676,6 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Product"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/ProductCreateDTO"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1158,49 +1135,6 @@
             "format": "int32"
           },
           "productImageUrl": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ProductCreateDTO": {
-        "type": "object",
-        "properties": {
-          "productName": {
-            "type": "string",
-            "nullable": true
-          },
-          "categoryId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "storeId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "productLabel": {
-            "type": "string",
-            "nullable": true
-          },
-          "productAmountInStock": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "productPrice": {
-            "type": "number",
-            "format": "double"
-          },
-          "productOriginalPrice": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "productDescription": {
-            "type": "string",
-            "nullable": true
-          },
-          "productSKU": {
             "type": "string",
             "nullable": true
           }

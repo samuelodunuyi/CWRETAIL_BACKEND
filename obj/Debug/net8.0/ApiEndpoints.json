@@ -401,6 +401,11 @@
         "Name": "productSKU",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "active",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -417,37 +422,6 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "CWSERVER.Controllers.ProductController",
-    "Method": "UpdateProduct",
-    "RelativePath": "api/Product/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "productDto",
-        "Type": "CWSERVER.Models.DTOs.ProductCreateDTO",
-        "IsRequired": true
-      },
-      {
-        "Name": "mainImage",
-        "Type": "Microsoft.AspNetCore.Http.IFormFile",
-        "IsRequired": false
-      },
-      {
-        "Name": "additionalImages",
-        "Type": "System.Collections.Generic.List\u00601[[Microsoft.AspNetCore.Http.IFormFile, Microsoft.AspNetCore.Http.Features, Version=8.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60]]",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": []

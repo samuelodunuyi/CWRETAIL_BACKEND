@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CWSERVER")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dea65553e3b7721c235e56b209de3efbf29d859f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e02d80024e7303aaf6337e822c0d2c5b0f769e96")]
 [assembly: System.Reflection.AssemblyProductAttribute("CWSERVER")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CWSERVER")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

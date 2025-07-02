@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Security.Cryptography.X509Certificates;
 
 namespace CWSERVER.Controllers
 {
@@ -42,7 +43,10 @@ namespace CWSERVER.Controllers
                
                 if (currentUser.Role == "Admin" && !string.IsNullOrEmpty(request.Role))
                 {
-                    role = request.Role;
+                    role = string.IsNullOrWhiteSpace(request.Role)
+                        ? string.Empty
+                        : char.ToUpper(request.Role[0]) + request.Role.Substring(1).ToLower();
+
                 }
                 createdBy = currentUser.Email;
             }
@@ -97,12 +101,15 @@ namespace CWSERVER.Controllers
             {
                 Email = request.Email,
                 UserName = request.Email,
-                Role = request.Role ?? "Employee", 
+                Role = string.IsNullOrWhiteSpace(request.Role)
+                    ? "Employee"
+                    : char.ToUpper(request.Role[0]) + request.Role.Substring(1).ToLower(),
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow,
                 LastUpdatedBy = currentUser.Email
             };
+
 
             var result = await _userManager.CreateAsync(user, request.Password!);
             if (!result.Succeeded)
@@ -145,7 +152,8 @@ namespace CWSERVER.Controllers
                 IsActive = user.IsActive,
                 CreatedAt = user.CreatedAt,
                 LastUpdatedAt = user.LastUpdatedAt,
-                LastUpdatedBy = user.LastUpdatedBy
+                LastUpdatedBy = user.LastUpdatedBy,
+
             };
 
          
@@ -157,6 +165,12 @@ namespace CWSERVER.Controllers
 
                 if (employee != null)
                 {
+                    response.FirstName = employee.FirstName;
+                    response.LastName = employee.LastName;
+                    response.PhoneNumber = employee.PhoneNumber;
+                    response.StoreId = employee.Store.StoreId;
+                    response.StoreName = employee.Store.StoreName;
+
                     response.EmployeeData = new EmployeeDto
                     {
                         Id = employee.Id,
@@ -180,6 +194,11 @@ namespace CWSERVER.Controllers
 
             if (customer != null)
             {
+
+                response.FirstName = customer.FirstName;
+                response.LastName = customer.LastName;
+                response.PhoneNumber = customer.PhoneNumber;
+
                 response.CustomerData = new CustomerDto
                 {
                     Id = customer.Id,

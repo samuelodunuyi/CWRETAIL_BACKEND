@@ -13,7 +13,17 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Configuration;
 
-var builder = WebApplication.CreateBuilder(args);
+
+var options = new WebApplicationOptions
+{
+    WebRootPath = "wwwroot"
+
+
+};
+//var builder = WebApplication.CreateBuilder(args);
+
+var builder = WebApplication.CreateBuilder(options);
+
 var config = builder.Configuration;
 var corsAllowedOrigins = builder.Environment.IsDevelopment()
     ? [

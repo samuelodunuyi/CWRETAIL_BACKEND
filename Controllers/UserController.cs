@@ -171,6 +171,7 @@ namespace CWSERVER.Controllers
                     response.StoreId = employee.Store.StoreId;
                     response.StoreName = employee.Store.StoreName;
 
+                    /*
                     response.EmployeeData = new EmployeeDto
                     {
                         Id = employee.Id,
@@ -184,7 +185,7 @@ namespace CWSERVER.Controllers
                         FirstName = employee.FirstName,
                         LastName = employee.LastName,
                         PhoneNumber = employee.PhoneNumber
-                    };
+                    };*/
                 }
             }
 

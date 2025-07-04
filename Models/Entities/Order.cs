@@ -15,7 +15,7 @@ namespace CWSERVER.Models.Entities
         public int? CustomerId { get; set; }
         public virtual Customer? Customer { get; set; }
 
-        public string Status { get; set; } = "Pending";
+        public int Status { get; set; } = 0;
         public string? CreatedBy { get; set; } 
 
         public DateTime? LastUpdatedAt { get; set; } = DateTime.UtcNow;

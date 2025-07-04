@@ -16,7 +16,15 @@ namespace CWSERVER.Controllers
         private readonly ApiDbContext _context = context;
 
         [HttpGet]
-        public async Task<IActionResult> GetOrders()
+        public async Task<IActionResult> GetOrders(
+         [FromQuery] int? customerId,
+        [FromQuery] int? status,
+        [FromQuery] int? storeId,
+        [FromQuery] string? createdBy,
+        [FromQuery] DateTime? startDate,
+        [FromQuery] DateTime? endDate
+            
+        )
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userRole = User.FindFirstValue(ClaimTypes.Role);
@@ -26,24 +34,46 @@ namespace CWSERVER.Controllers
                 .Include(o => o.Customer)
                 .Include(o => o.OrderItems);
 
+            // Role-based restriction
             if (userRole == "Customer")
             {
                 var customer = await _context.Customers.FirstOrDefaultAsync(c => c.UserId == userId);
                 if (customer == null) return NotFound("Customer not found");
-
                 query = query.Where(o => o.CustomerId == customer.Id);
             }
             else if (userRole == "Employee" || userRole == "StoreRep")
             {
                 var employee = await _context.Employees.FirstOrDefaultAsync(e => e.UserId == userId);
                 if (employee == null) return NotFound("Employee not found");
-
                 query = query.Where(o => o.StoreId == employee.StoreId);
             }
+            else if (userRole == "Admin")
+            {
+                // Optional filters
+                if (customerId.HasValue)
+                    query = query.Where(o => o.CustomerId == customerId.Value);
+
+                if (status.HasValue)
+                    query = query.Where(o => o.Status == status.Value);
+
+                if (storeId.HasValue)
+                    query = query.Where(o => o.StoreId == storeId.Value);
+
+                if (!string.IsNullOrEmpty(createdBy))
+                    query = query.Where(o => o.CreatedBy == createdBy);
+
+                if (startDate.HasValue)
+                    query = query.Where(o => o.OrderDate >= startDate.Value);
+
+                if (endDate.HasValue)
+                    query = query.Where(o => o.OrderDate <= endDate.Value);
+            }
+           
 
             var orders = await query.ToListAsync();
             return Ok(orders);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] Order orderRequest)
@@ -209,7 +239,7 @@ namespace CWSERVER.Controllers
             order.LastUpdatedBy = userEmail;
 
             // Restock if order is now canceled/returned/rejected
-            var restockStatuses = new[] { "Cancelled", "Returned", "Rejected" };
+            var restockStatuses = new[] { 1, 2, 3 };
 
             if (!restockStatuses.Contains(oldStatus) && restockStatuses.Contains(updatedOrder.Status))
             {

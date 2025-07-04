@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace CWSERVER.Models.Entities
 {
@@ -8,6 +9,9 @@ namespace CWSERVER.Models.Entities
 
         [ForeignKey("Order")]
         public int OrderId { get; set; }
+        
+        
+        [JsonIgnore]
         public virtual Order? Order { get; set; }
 
         public int ProductId { get; set; }

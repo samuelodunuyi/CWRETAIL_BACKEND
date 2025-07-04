@@ -54,13 +54,22 @@ namespace CWSERVER.Controllers
             orderRequest.OrderDate = DateTime.UtcNow;
 
             // Validate Customer
-            if (orderRequest.CustomerId != 0)
+            if (orderRequest.CustomerId.HasValue)
             {
-                var customer = await _context.Customers.FindAsync(orderRequest.CustomerId);
+                var customer = await _context.Customers.FindAsync(orderRequest.CustomerId.Value);
                 if (customer == null) return BadRequest("Invalid customer");
+
                 if (User.IsInRole("Customer") && customer.UserId != userId)
                     return Forbid();
             }
+            else if (User.IsInRole("Customer"))
+            {
+                var customer = await _context.Customers.FirstOrDefaultAsync(c => c.UserId == userId);
+                if (customer == null) return BadRequest("No customer profile found for this user.");
+
+                orderRequest.CustomerId = customer.Id;
+            }
+
 
             // Validate Store permission
             if (User.IsInRole("Employee") || User.IsInRole("StoreRep"))

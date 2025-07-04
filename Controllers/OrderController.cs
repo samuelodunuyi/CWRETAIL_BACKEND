@@ -46,37 +46,106 @@ namespace CWSERVER.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] Order order)
+        public async Task<IActionResult> CreateOrder([FromBody] Order orderRequest)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            orderRequest.CreatedBy = userEmail;
+            orderRequest.OrderDate = DateTime.UtcNow;
 
-          
-            order.CreatedBy = userEmail;
-            order.OrderDate = DateTime.UtcNow;
+            // Validate Customer
+            if (orderRequest.CustomerId != 0)
+            {
+                var customer = await _context.Customers.FindAsync(orderRequest.CustomerId);
+                if (customer == null) return BadRequest("Invalid customer");
+                if (User.IsInRole("Customer") && customer.UserId != userId)
+                    return Forbid();
+            }
 
-           
-            var customer = await _context.Customers.FindAsync(order.CustomerId);
-            if (customer == null) return BadRequest("Invalid customer");
-
-          
-            if (User.IsInRole("Customer") && customer.UserId != userId)
-                return Forbid();
-
+            // Validate Store permission
             if (User.IsInRole("Employee") || User.IsInRole("StoreRep"))
             {
                 var employee = await _context.Employees.FirstOrDefaultAsync(e => e.UserId == userId);
                 if (employee == null) return NotFound("Employee not found");
-
-                if (order.StoreId != employee.StoreId)
+                if (orderRequest.StoreId != employee.StoreId)
                     return Forbid();
             }
 
-            _context.Orders.Add(order);
+            var orderItems = new List<OrderItem>();
+            var errors = new List<object>();
+
+            foreach (var item in orderRequest.OrderItems)
+            {
+                var product = await _context.Products.FindAsync(item.ProductId);
+
+                if (product == null)
+                {
+                    errors.Add(new { productId = item.ProductId, error = "PRODUCT_NOT_FOUND" });
+                    continue;
+                }
+
+                if (!product.Status)
+                {
+                    errors.Add(new { productId = item.ProductId, error = "PRODUCT_INACTIVE" });
+                    continue;
+                }
+
+                if (product.ProductAmountInStock <= 0)
+                {
+                    errors.Add(new { productId = product.ProductId, error = "OUT_OF_STOCK" });
+                    continue;
+                }
+
+                if (item.Quantity > product.ProductAmountInStock)
+                {
+                    errors.Add(new
+                    {
+                        productId = product.ProductId,
+                        error = "NOT_ENOUGH_STOCK",
+                        available = product.ProductAmountInStock
+                    });
+                    continue;
+                }
+
+                // Deduct stock
+                product.ProductAmountInStock -= item.Quantity;
+
+                // Create order item
+                orderItems.Add(new OrderItem
+                {
+                    ProductId = product.ProductId,
+                    ProductName = product.ProductName,
+                    ProductDescription = product.ProductDescription,
+                    ProductCategory = product.Category?.CategoryName,
+                    ProductImageUrl = product.MainImagePath,
+                    PriceAtOrder = product.ProductPrice,
+                    OriginalPriceAtOrder = product.ProductOriginalPrice,
+                    Quantity = item.Quantity
+                });
+            }
+
+            if (errors.Any())
+                return BadRequest(new { message = "One or more items could not be ordered", errors });
+
+            orderRequest.OrderItems = orderItems;
+
+            _context.Orders.Add(orderRequest);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, order);
+            var createdOrder = await _context.Orders
+                .Include(o => o.Store)
+                .Include(o => o.Customer)
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.Id == orderRequest.Id);
+
+            return CreatedAtAction(nameof(GetOrderById), new { id = orderRequest.Id }, createdOrder);
+
+            //return CreatedAtAction(nameof(GetOrderById), new { id = orderRequest.Id }, orderRequest);
         }
+
+
+
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderById(int id)
@@ -124,15 +193,45 @@ namespace CWSERVER.Controllers
             if (employee == null || order.StoreId != employee.StoreId)
                 return Forbid();
 
-       
+
+            var oldStatus = order.Status;
             order.Status = updatedOrder.Status;
             order.LastUpdatedAt = DateTime.UtcNow;
             order.LastUpdatedBy = userEmail;
 
+            // Restock if order is now canceled/returned/rejected
+            var restockStatuses = new[] { "Cancelled", "Returned", "Rejected" };
+
+            if (!restockStatuses.Contains(oldStatus) && restockStatuses.Contains(updatedOrder.Status))
+            {
+                var orderItems = await _context.OrderItems.Where(oi => oi.OrderId == order.Id).ToListAsync();
+
+                foreach (var item in orderItems)
+                {
+                    var product = await _context.Products.FindAsync(item.ProductId);
+                    if (product != null)
+                    {
+                        product.ProductAmountInStock += item.Quantity;
+                    }
+                }
+            }
+
+            
+
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+                        var updatedOrderWithDetails = await _context.Orders
+                .Include(o => o.Store)
+                .Include(o => o.Customer)
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            return Ok(updatedOrderWithDetails);
+
+
+
+            //return NoContent();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace CWSERVER.Models.Entities
         public virtual Store? Store { get; set; }
 
         [ForeignKey("Customer")]
-        public int CustomerId { get; set; }
+        public int? CustomerId { get; set; }
         public virtual Customer? Customer { get; set; }
 
         public string Status { get; set; } = "Pending";

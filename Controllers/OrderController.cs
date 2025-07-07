@@ -241,6 +241,12 @@ namespace CWSERVER.Controllers
             // Restock if order is now canceled/returned/rejected
             var restockStatuses = new[] { 1, 2, 3 };
 
+            if(oldStatus == 5)
+            {
+
+                return NoContent();
+            }
+
           
 
             if (!restockStatuses.Contains(oldStatus) && restockStatuses.Contains(updatedOrder.Status) && oldStatus != 4)
@@ -262,7 +268,7 @@ namespace CWSERVER.Controllers
             _context.Orders.Update(order);
             await _context.SaveChangesAsync();
 
-                        var updatedOrderWithDetails = await _context.Orders
+             var updatedOrderWithDetails = await _context.Orders
                 .Include(o => o.Store)
                 .Include(o => o.Customer)
                 .Include(o => o.OrderItems)

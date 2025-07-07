@@ -241,7 +241,9 @@ namespace CWSERVER.Controllers
             // Restock if order is now canceled/returned/rejected
             var restockStatuses = new[] { 1, 2, 3 };
 
-            if (!restockStatuses.Contains(oldStatus) && restockStatuses.Contains(updatedOrder.Status))
+          
+
+            if (!restockStatuses.Contains(oldStatus) && restockStatuses.Contains(updatedOrder.Status) && oldStatus != 4)
             {
                 var orderItems = await _context.OrderItems.Where(oi => oi.OrderId == order.Id).ToListAsync();
 

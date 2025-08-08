@@ -19,7 +19,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "CWSERVER.Models.DTOs.LoginRequest",
+        "Type": "CWSERVER.Models.Core.DTOs.LoginRequest",
         "IsRequired": true
       }
     ],
@@ -35,7 +35,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "CWSERVER.Models.DTOs.RefreshTokenRequest",
+        "Type": "CWSERVER.Models.Core.DTOs.RefreshTokenRequest",
         "IsRequired": true
       }
     ],
@@ -67,7 +67,7 @@
     "Parameters": [
       {
         "Name": "category",
-        "Type": "CWSERVER.Models.Entities.Category",
+        "Type": "CWSERVER.Models.Core.Entities.Category",
         "IsRequired": true
       }
     ],
@@ -104,7 +104,7 @@
       },
       {
         "Name": "updatedCategory",
-        "Type": "CWSERVER.Models.Entities.Category",
+        "Type": "CWSERVER.Models.Core.Entities.Category",
         "IsRequired": true
       }
     ],
@@ -157,7 +157,7 @@
     "Parameters": [
       {
         "Name": "customer",
-        "Type": "CWSERVER.Models.Entities.Customer",
+        "Type": "CWSERVER.Models.Core.Entities.Customer",
         "IsRequired": true
       }
     ],
@@ -194,7 +194,7 @@
       },
       {
         "Name": "updatedCustomer",
-        "Type": "CWSERVER.Models.Entities.Customer",
+        "Type": "CWSERVER.Models.Core.Entities.Customer",
         "IsRequired": true
       }
     ],
@@ -247,7 +247,7 @@
     "Parameters": [
       {
         "Name": "employee",
-        "Type": "CWSERVER.Models.Entities.Employee",
+        "Type": "CWSERVER.Models.Core.Entities.Employee",
         "IsRequired": true
       }
     ],
@@ -284,7 +284,7 @@
       },
       {
         "Name": "updatedEmployee",
-        "Type": "CWSERVER.Models.Entities.Employee",
+        "Type": "CWSERVER.Models.Core.Entities.Employee",
         "IsRequired": true
       }
     ],
@@ -313,7 +313,38 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "customerId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "status",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "storeId",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "createdBy",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "startDate",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "endDate",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -325,8 +356,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "order",
-        "Type": "CWSERVER.Models.Entities.Order",
+        "Name": "orderRequest",
+        "Type": "CWSERVER.Models.Core.Entities.Order",
         "IsRequired": true
       }
     ],
@@ -363,7 +394,7 @@
       },
       {
         "Name": "updatedOrder",
-        "Type": "CWSERVER.Models.Entities.Order",
+        "Type": "CWSERVER.Models.Core.Entities.Order",
         "IsRequired": true
       }
     ],
@@ -468,7 +499,7 @@
     "Parameters": [
       {
         "Name": "store",
-        "Type": "CWSERVER.Models.Entities.Store",
+        "Type": "CWSERVER.Models.Core.Entities.Store",
         "IsRequired": true
       }
     ],
@@ -505,7 +536,7 @@
       },
       {
         "Name": "updatedStore",
-        "Type": "CWSERVER.Models.Entities.Store",
+        "Type": "CWSERVER.Models.Core.Entities.Store",
         "IsRequired": true
       }
     ],
@@ -537,7 +568,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "CWSERVER.Models.DTOs.RegisterRequest",
+        "Type": "CWSERVER.Models.Core.DTOs.RegisterRequest",
         "IsRequired": true
       }
     ],
@@ -553,7 +584,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "CWSERVER.Models.DTOs.RegisterEmployeeRequest",
+        "Type": "CWSERVER.Models.Core.DTOs.RegisterEmployeeRequest",
         "IsRequired": true
       }
     ],

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
-namespace CWSERVER.Models.Entities
+namespace CWSERVER.Models.Core.Entities
 {
     public class User : IdentityUser
     {

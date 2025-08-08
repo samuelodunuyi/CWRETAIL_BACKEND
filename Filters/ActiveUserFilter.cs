@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using CWSERVER.Models.Entities;
+using CWSERVER.Models.Core.Entities;
 
 namespace CWSERVER.Filters
 {

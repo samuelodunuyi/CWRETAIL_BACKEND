@@ -1,4 +1,4 @@
-﻿namespace CWSERVER.Models.DTOs
+﻿namespace CWSERVER.Models.Core.DTOs
 {
     public class EmployeeDto
     {

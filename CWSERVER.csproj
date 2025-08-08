@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\Industries\Retail Store\" />
+    <Folder Include="Models\Industries\Pharmacy\" />
+    <Folder Include="Models\Industries\Restaurant\DTOs\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

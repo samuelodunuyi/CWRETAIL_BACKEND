@@ -1,4 +1,4 @@
-﻿namespace CWSERVER.Models.Entities
+﻿namespace CWSERVER.Models.Core.Entities
 {
     public class RefreshToken
     {

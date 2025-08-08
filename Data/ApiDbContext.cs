@@ -1,4 +1,4 @@
-﻿using CWSERVER.Models.Entities;
+﻿using CWSERVER.Models.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

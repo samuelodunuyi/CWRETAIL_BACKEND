@@ -1,6 +1,6 @@
 ﻿using CWSERVER.Data;
-using CWSERVER.Models.DTOs;
-using CWSERVER.Models.Entities;
+using CWSERVER.Models.Core.Entities;
+using CWSERVER.Models.Core.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

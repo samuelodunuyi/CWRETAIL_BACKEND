@@ -1,7 +1,6 @@
 // Program.cs
 using CWSERVER.Data;
 using CWSERVER.Filters;
-using CWSERVER.Models.Entities;
 using CWSERVER.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Configuration;
+using CWSERVER.Models.Core.Entities;
 
 
 var options = new WebApplicationOptions
@@ -85,7 +85,7 @@ builder.Services.AddDbContext<ApiDbContext>(options =>
 options.UseSqlServer(
         config.GetConnectionString("DefaultConnection"),
         sqlServerOptions => sqlServerOptions.EnableRetryOnFailure(
-            maxRetryCount: 5,             // default is 6
+            maxRetryCount: 10,             // default is 6
             maxRetryDelay: TimeSpan.FromSeconds(30), // default is 30
             errorNumbersToAdd: null       // keep null unless you want to retry specific SQL error codes
         )

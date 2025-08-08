@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CWSERVER.Models.DTOs
+namespace CWSERVER.Models.Core.DTOs
 {
     public class RegisterEmployeeRequest : RegisterRequest
     {

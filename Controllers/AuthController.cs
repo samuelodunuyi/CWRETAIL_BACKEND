@@ -1,5 +1,5 @@
-﻿using CWSERVER.Models.DTOs;
-using CWSERVER.Models.Entities;
+﻿using CWSERVER.Models.Core.DTOs;
+using CWSERVER.Models.Core.Entities;
 using CWSERVER.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace CWSERVER.Models.Entities
+namespace CWSERVER.Models.Core.Entities
 {
     public class Product
     {

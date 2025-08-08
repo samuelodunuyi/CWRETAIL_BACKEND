@@ -1,6 +1,6 @@
 ﻿using CWSERVER.Data;
-using CWSERVER.Models.DTOs;
-using CWSERVER.Models.Entities;
+using CWSERVER.Models.Core.DTOs;
+using CWSERVER.Models.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,16 +12,10 @@ namespace CWSERVER.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController(UserManager<User> userManager, ApiDbContext context) : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
-        private readonly ApiDbContext _context;
-
-        public UserController(UserManager<User> userManager, ApiDbContext context)
-        {
-            _userManager = userManager;
-            _context = context;
-        }
+        private readonly UserManager<User> _userManager = userManager;
+        private readonly ApiDbContext _context = context;
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
@@ -45,7 +39,7 @@ namespace CWSERVER.Controllers
                 {
                     role = string.IsNullOrWhiteSpace(request.Role)
                         ? string.Empty
-                        : char.ToUpper(request.Role[0]) + request.Role.Substring(1).ToLower();
+                        : char.ToUpper(request.Role[0]) + request.Role[1..].ToLower();
 
                 }
                 createdBy = currentUser.Email;
@@ -103,7 +97,7 @@ namespace CWSERVER.Controllers
                 UserName = request.Email,
                 Role = string.IsNullOrWhiteSpace(request.Role)
                     ? "Employee"
-                    : char.ToUpper(request.Role[0]) + request.Role.Substring(1).ToLower(),
+                    : char.ToUpper(request.Role[0]) + request.Role[1..].ToLower(),
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow,
                 LastUpdatedAt = DateTime.UtcNow,
@@ -168,8 +162,8 @@ namespace CWSERVER.Controllers
                     response.FirstName = employee.FirstName;
                     response.LastName = employee.LastName;
                     response.PhoneNumber = employee.PhoneNumber;
-                    response.StoreId = employee.Store.StoreId;
-                    response.StoreName = employee.Store.StoreName;
+                    response.StoreId = employee.Store?.StoreId;
+                    response.StoreName = employee.Store?.StoreName;
 
                     /*
                     response.EmployeeData = new EmployeeDto

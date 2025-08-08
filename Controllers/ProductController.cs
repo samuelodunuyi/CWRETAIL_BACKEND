@@ -1,12 +1,12 @@
 ﻿using CWSERVER.Data;
-using CWSERVER.Models.Entities;
-using CWSERVER.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using System.Linq;
+using CWSERVER.Models.Core.DTOs;
+using CWSERVER.Models.Core.Entities;
 
 namespace CWSERVER.Controllers
 {

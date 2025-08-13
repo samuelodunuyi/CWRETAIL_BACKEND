@@ -1,4 +1,5 @@
 ﻿using CWSERVER.Models.Core.Entities;
+using CWSERVER.Models.Industries.Restaurant.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,19 @@ namespace CWSERVER.Data
 
         public DbSet<ProductImage> ProductImages { get; set; }
 
+        // New Industry Models DBSet 
+        public DbSet<AuditLogs> AuditLogss { get; set; }
+        public DbSet<Categories> Categoriess { get; set; }
+        public DbSet<Ingredients> Ingredientss { get; set; }
+        public DbSet<NutritionalInfo> NutritionalInfos { get; set; }
+        public DbSet<Permissions> Permissionss { get; set; }
+        public DbSet<Products> Productss { get; set; }
+        public DbSet<ProductVariants> ProductVariantss { get; set; }
+        public DbSet<Profiles> Profiless { get; set; }
+        public DbSet<RecipeIngredients> RecipeIngredientss { get; set; }
+        public DbSet<Recipes> Recipess { get; set; }
+        public DbSet<Stores> Storess { get; set; }
+        public DbSet<UserRoles> UserRoless { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,6 +45,45 @@ namespace CWSERVER.Data
             modelBuilder.Entity<Order>().ToTable("Order");
             modelBuilder.Entity<OrderItem>().ToTable("OrderItem");
             modelBuilder.Entity<RefreshToken>().ToTable("RefreshToken");
+
+            // New Industry Models DBSet 
+            modelBuilder.Entity<AuditLogs>().ToTable("AuditLogs");
+            modelBuilder.Entity<Categories>().ToTable("Categories");
+            modelBuilder.Entity<Ingredients>().ToTable("Ingredients");
+            modelBuilder.Entity<NutritionalInfo>().ToTable("NutritionalInfo");
+            modelBuilder.Entity<Permissions>().ToTable("Permissions");
+            modelBuilder.Entity<Products>().ToTable("Products");
+            modelBuilder.Entity<ProductVariants>().ToTable("ProductVariants");
+            modelBuilder.Entity<Profiles>().ToTable("Profiles");
+            modelBuilder.Entity<RecipeIngredients>().ToTable("RecipeIngredients");
+            modelBuilder.Entity<Recipes>().ToTable("Recipes");
+            modelBuilder.Entity<Stores>().ToTable("Stores");
+            modelBuilder.Entity<UserRoles>().ToTable("UserRoles");
+
+            modelBuilder.Entity<AuditLogs>()
+                .HasKey(a => a.AuditLogId);
+            modelBuilder.Entity<Categories>()
+                .HasKey(a => a.CategoryId);
+            modelBuilder.Entity<Ingredients>()
+                .HasKey(a => a.IngredientId);
+            modelBuilder.Entity<NutritionalInfo>()
+                .HasKey(a => a.NutritionalInfoId);
+            modelBuilder.Entity<Permissions>()
+                .HasKey(a => a.PermissionId);
+            modelBuilder.Entity<Products>()
+                .HasKey(a => a.ProductId);
+            modelBuilder.Entity<ProductVariants>()
+                .HasKey(a => a.ProductVariantId);
+            modelBuilder.Entity<Profiles>()
+                .HasKey(a => a.ProfileId);
+            modelBuilder.Entity<RecipeIngredients>()
+                .HasKey(a => a.RecipeId);
+            modelBuilder.Entity<Recipes>()
+                .HasKey(a => a.RecipeId);
+            modelBuilder.Entity<Stores>()
+                .HasKey(a => a.StoresId);
+            modelBuilder.Entity<UserRoles>()
+                .HasKey(a => a.UserRolesId);
 
             modelBuilder.Entity<Product>()
                 .Property(p => p.ProductId)

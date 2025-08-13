@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CWSERVER.Models.Industries.Restaurant.Entities
 {
     public class RecipeIngredients
     {
+        [Key]
         public int RecipeIngredientsId { get; set; }
         [ForeignKey("Recipes")]
         public int RecipeId { get; set; }
@@ -14,6 +16,6 @@ namespace CWSERVER.Models.Industries.Restaurant.Entities
         public string? UnitOfMeasure { get; set; }
         public bool IsOptional { get; set; }
         public string? PreparationNotes { get; set; }
-        public DateTime CreateAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

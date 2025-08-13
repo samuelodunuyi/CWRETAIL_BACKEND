@@ -8,7 +8,7 @@ using System.Linq;
 using CWSERVER.Models.Core.DTOs;
 using CWSERVER.Models.Core.Entities;
 
-namespace CWSERVER.Controllers
+namespace CWSERVER.Controllers.Core
 {
     [Route("api/[controller]")]
     [ApiController]

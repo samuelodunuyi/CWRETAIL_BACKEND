@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 
-namespace CWSERVER.Controllers
+namespace CWSERVER.Controllers.Core
 {
     [Route("api/[controller]")]
     [ApiController]

@@ -1,12 +1,11 @@
-﻿
-using CWSERVER.Data;
+﻿using CWSERVER.Data;
 using CWSERVER.Models.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace CWSERVER.Controllers
+namespace CWSERVER.Controllers.Core
 {
     [Route("api/[controller]")]
     [ApiController]

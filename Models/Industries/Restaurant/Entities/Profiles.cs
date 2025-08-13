@@ -1,7 +1,10 @@
-﻿namespace CWSERVER.Models.Industries.Restaurant.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CWSERVER.Models.Industries.Restaurant.Entities
 {
     public class Profiles
     {
+        [Key]
         public int ProfileId { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

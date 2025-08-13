@@ -12,6 +12,8 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Configuration;
 using CWSERVER.Models.Core.Entities;
+using CWSERVER.Interfaces.Industry.Restaurant;
+using CWSERVER.Respository.Industry.Restaurant;
 
 
 var options = new WebApplicationOptions
@@ -76,6 +78,18 @@ builder.Services.AddSwaggerGen(options =>
 
 
 builder.Services.AddScoped<ActiveUserFilter>();
+builder.Services.AddScoped<IAuditLogs, AuditLogsRepository>();
+builder.Services.AddScoped<ICategories, CategoriesRepository>();
+builder.Services.AddScoped<IIngredients, IngredientsRepository>();
+builder.Services.AddScoped<INutritionalInfo, NutritionalInfoRepository>();
+builder.Services.AddScoped<IPermissions, PermissionsRepository>();
+builder.Services.AddScoped<IProducts, ProductsRepository>();
+builder.Services.AddScoped<IProductVariants, ProductVariantsRepository>();
+builder.Services.AddScoped<IProfiles, ProfilesRepository>();
+builder.Services.AddScoped<IRecipeIngredients, RecipeIngredientsRepository>();
+builder.Services.AddScoped<IRecipes, RecipesRepository>();
+builder.Services.AddScoped<IStores, StoreRepository>();
+builder.Services.AddScoped<IUserRoles, UserRolesRepository>();
 //builder.Services.AddHttpContextAccessor();
 // Add DbContext
 //builder.Services.AddDbContext<ApiDbContext>(options =>

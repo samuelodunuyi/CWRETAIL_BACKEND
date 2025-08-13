@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CWSERVER.Models.Industries.Restaurant.Entities
 {
     public class UserRoles
     {
+        [Key]
         public int UserRolesId { get; set; }
         [ForeignKey("User")]
         public string? UserId { get; set; }

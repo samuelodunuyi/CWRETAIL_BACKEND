@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CWSERVER.Models.Industries.Restaurant.Entities
 {
     public class Ingredients
     {
+        [Key]
         public int IngredientId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }

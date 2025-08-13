@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace CWSERVER.Controllers
+namespace CWSERVER.Controllers.Core
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -125,7 +125,7 @@ namespace CWSERVER.Controllers
             else if (User.IsInRole("Employee") || User.IsInRole("StoreRep"))
             {
                 var employee = await GetCurrentEmployee();
-                if (employee == null || (existingCustomer.CreatedBy != employee.User!.Email && existingCustomer.UserId != null))
+                if (employee == null || existingCustomer.CreatedBy != employee.User!.Email && existingCustomer.UserId != null)
                     return Forbid();
             }
 

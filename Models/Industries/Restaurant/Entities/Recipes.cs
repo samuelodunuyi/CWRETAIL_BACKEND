@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CWSERVER.Models.Industries.Restaurant.Entities
 {
     public class Recipes
     {
+        [Key]
         public int RecipeId { get; set; }
         [ForeignKey("Product")]
         public int ProductId { get; set; }

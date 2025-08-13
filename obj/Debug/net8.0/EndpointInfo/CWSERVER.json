@@ -5,6 +5,18 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/AuditLogs": {
+      "get": {
+        "tags": [
+          "AuditLogs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Auth/token": {
       "post": {
         "tags": [

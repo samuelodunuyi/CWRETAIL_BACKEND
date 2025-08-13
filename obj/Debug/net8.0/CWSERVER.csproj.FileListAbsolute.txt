@@ -701,10 +701,10 @@ C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\staticwebassets.bu
 C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\CWSERVER.csproj.Up2Date
 C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\CWSERVER.dll
 C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\refint\CWSERVER.dll
 C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\CWSERVER.pdb
 C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\CWSERVER.genruntimeconfig.cache
 C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\ref\CWSERVER.dll
+C:\Users\USER\Source\Repos\CW_RETAIL_BACKEND\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

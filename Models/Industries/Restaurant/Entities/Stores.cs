@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CWSERVER.Models.Industries.Restaurant.Entities
 {
     public class Stores
     {
+        [Key]
         public int StoresId { get; set; }
         public string? Name { get; set; }
         public string? Location { get; set; }
@@ -15,6 +17,6 @@ namespace CWSERVER.Models.Industries.Restaurant.Entities
         public string? Email { get; set; }
         public string? Status { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdateAt {  get; set; }
+        public DateTime UpdatedAt {  get; set; }
     }
 }

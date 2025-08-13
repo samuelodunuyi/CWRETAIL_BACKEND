@@ -3,7 +3,7 @@ using CWSERVER.Models.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace CWSERVER.Controllers
+namespace CWSERVER.Controllers.Core
 {
     [Route("api/[controller]")]
     [ApiController]

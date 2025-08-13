@@ -1,6 +1,16 @@
 [
   {
-    "ContainingType": "CWSERVER.Controllers.AuthController",
+    "ContainingType": "CWSERVER.Controllers.Industries.Restaurants.AuditLogsController",
+    "Method": "GetAllLogs",
+    "RelativePath": "api/AuditLogs",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CWSERVER.Controllers.Core.AuthController",
     "Method": "Logout",
     "RelativePath": "api/Auth/logout",
     "HttpMethod": "POST",
@@ -10,7 +20,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.AuthController",
+    "ContainingType": "CWSERVER.Controllers.Core.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/token",
     "HttpMethod": "POST",
@@ -26,7 +36,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.AuthController",
+    "ContainingType": "CWSERVER.Controllers.Core.AuthController",
     "Method": "RefreshToken",
     "RelativePath": "api/Auth/token/refresh",
     "HttpMethod": "POST",
@@ -42,7 +52,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.CategoryController",
+    "ContainingType": "CWSERVER.Controllers.Core.CategoryController",
     "Method": "GetAllCategories",
     "RelativePath": "api/Category",
     "HttpMethod": "GET",
@@ -58,7 +68,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.CategoryController",
+    "ContainingType": "CWSERVER.Controllers.Core.CategoryController",
     "Method": "CreateCategory",
     "RelativePath": "api/Category",
     "HttpMethod": "POST",
@@ -74,7 +84,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.CategoryController",
+    "ContainingType": "CWSERVER.Controllers.Core.CategoryController",
     "Method": "GetCategoryById",
     "RelativePath": "api/Category/{id}",
     "HttpMethod": "GET",
@@ -90,7 +100,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.CategoryController",
+    "ContainingType": "CWSERVER.Controllers.Core.CategoryController",
     "Method": "UpdateCategory",
     "RelativePath": "api/Category/{id}",
     "HttpMethod": "PUT",
@@ -111,7 +121,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.CategoryController",
+    "ContainingType": "CWSERVER.Controllers.Core.CategoryController",
     "Method": "DeleteCategory",
     "RelativePath": "api/Category/{id}",
     "HttpMethod": "DELETE",
@@ -127,7 +137,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.CustomerController",
+    "ContainingType": "CWSERVER.Controllers.Core.CustomerController",
     "Method": "GetAllCustomers",
     "RelativePath": "api/Customer",
     "HttpMethod": "GET",
@@ -148,7 +158,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.CustomerController",
+    "ContainingType": "CWSERVER.Controllers.Core.CustomerController",
     "Method": "CreateCustomer",
     "RelativePath": "api/Customer",
     "HttpMethod": "POST",
@@ -164,7 +174,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.CustomerController",
+    "ContainingType": "CWSERVER.Controllers.Core.CustomerController",
     "Method": "GetCustomerById",
     "RelativePath": "api/Customer/{id}",
     "HttpMethod": "GET",
@@ -180,7 +190,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.CustomerController",
+    "ContainingType": "CWSERVER.Controllers.Core.CustomerController",
     "Method": "UpdateCustomer",
     "RelativePath": "api/Customer/{id}",
     "HttpMethod": "PUT",
@@ -201,7 +211,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.CustomerController",
+    "ContainingType": "CWSERVER.Controllers.Core.CustomerController",
     "Method": "DeleteCustomer",
     "RelativePath": "api/Customer/{id}",
     "HttpMethod": "DELETE",
@@ -217,7 +227,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.EmployeeController",
+    "ContainingType": "CWSERVER.Controllers.Core.EmployeeController",
     "Method": "GetAllEmployees",
     "RelativePath": "api/Employee",
     "HttpMethod": "GET",
@@ -238,7 +248,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.EmployeeController",
+    "ContainingType": "CWSERVER.Controllers.Core.EmployeeController",
     "Method": "CreateEmployee",
     "RelativePath": "api/Employee",
     "HttpMethod": "POST",
@@ -254,7 +264,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.EmployeeController",
+    "ContainingType": "CWSERVER.Controllers.Core.EmployeeController",
     "Method": "GetEmployeeById",
     "RelativePath": "api/Employee/{id}",
     "HttpMethod": "GET",
@@ -270,7 +280,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.EmployeeController",
+    "ContainingType": "CWSERVER.Controllers.Core.EmployeeController",
     "Method": "UpdateEmployee",
     "RelativePath": "api/Employee/{id}",
     "HttpMethod": "PUT",
@@ -291,7 +301,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.EmployeeController",
+    "ContainingType": "CWSERVER.Controllers.Core.EmployeeController",
     "Method": "DeleteEmployee",
     "RelativePath": "api/Employee/{id}",
     "HttpMethod": "DELETE",
@@ -307,7 +317,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.OrderController",
+    "ContainingType": "CWSERVER.Controllers.Core.OrderController",
     "Method": "GetOrders",
     "RelativePath": "api/Order",
     "HttpMethod": "GET",
@@ -348,7 +358,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.OrderController",
+    "ContainingType": "CWSERVER.Controllers.Core.OrderController",
     "Method": "CreateOrder",
     "RelativePath": "api/Order",
     "HttpMethod": "POST",
@@ -364,7 +374,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.OrderController",
+    "ContainingType": "CWSERVER.Controllers.Core.OrderController",
     "Method": "GetOrderById",
     "RelativePath": "api/Order/{id}",
     "HttpMethod": "GET",
@@ -380,7 +390,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.OrderController",
+    "ContainingType": "CWSERVER.Controllers.Core.OrderController",
     "Method": "UpdateOrder",
     "RelativePath": "api/Order/{id}",
     "HttpMethod": "PUT",
@@ -401,7 +411,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.ProductController",
+    "ContainingType": "CWSERVER.Controllers.Core.ProductController",
     "Method": "GetAllProducts",
     "RelativePath": "api/Product",
     "HttpMethod": "GET",
@@ -442,7 +452,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.ProductController",
+    "ContainingType": "CWSERVER.Controllers.Core.ProductController",
     "Method": "GetProductById",
     "RelativePath": "api/Product/{id}",
     "HttpMethod": "GET",
@@ -458,7 +468,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.ProductController",
+    "ContainingType": "CWSERVER.Controllers.Core.ProductController",
     "Method": "DeleteProduct",
     "RelativePath": "api/Product/{id}",
     "HttpMethod": "DELETE",
@@ -474,7 +484,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.StoreController",
+    "ContainingType": "CWSERVER.Controllers.Core.StoreController",
     "Method": "GetAllStores",
     "RelativePath": "api/Store",
     "HttpMethod": "GET",
@@ -490,7 +500,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.StoreController",
+    "ContainingType": "CWSERVER.Controllers.Core.StoreController",
     "Method": "CreateStore",
     "RelativePath": "api/Store",
     "HttpMethod": "POST",
@@ -506,7 +516,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.StoreController",
+    "ContainingType": "CWSERVER.Controllers.Core.StoreController",
     "Method": "GetStoreById",
     "RelativePath": "api/Store/{id}",
     "HttpMethod": "GET",
@@ -522,7 +532,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.StoreController",
+    "ContainingType": "CWSERVER.Controllers.Core.StoreController",
     "Method": "UpdateStore",
     "RelativePath": "api/Store/{id}",
     "HttpMethod": "PUT",
@@ -543,7 +553,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.StoreController",
+    "ContainingType": "CWSERVER.Controllers.Core.StoreController",
     "Method": "DeleteStore",
     "RelativePath": "api/Store/{id}",
     "HttpMethod": "DELETE",
@@ -559,7 +569,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.UserController",
+    "ContainingType": "CWSERVER.Controllers.Core.UserController",
     "Method": "Register",
     "RelativePath": "api/User/register",
     "HttpMethod": "POST",
@@ -575,7 +585,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.UserController",
+    "ContainingType": "CWSERVER.Controllers.Core.UserController",
     "Method": "RegisterEmployee",
     "RelativePath": "api/User/register-employee",
     "HttpMethod": "POST",
@@ -591,7 +601,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CWSERVER.Controllers.UserController",
+    "ContainingType": "CWSERVER.Controllers.Core.UserController",
     "Method": "GetCurrentUserData",
     "RelativePath": "api/User/userdata",
     "HttpMethod": "GET",

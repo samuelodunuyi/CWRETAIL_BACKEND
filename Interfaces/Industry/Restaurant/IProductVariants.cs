@@ -7,8 +7,8 @@ namespace CWSERVER.Interfaces.Industry.Restaurant
     {
         Task<List<ProductVariants>> GetAllProductVariantsAsync();
         Task<ProductVariants?> GetProductVariantsByIdAsync(int id);
-        Task<ProductVariants?> CreateProductVariants(ProductVariants productVariants);
-        Task<ProductVariants?> UpdateProductVariantsAsync(int id, UpdateProductVariants updateProductVariants);  
+        Task<ProductVariants?> CreateProductVariantsAsync(ProductVariants productVariants);
+        Task<ProductVariants?> UpdateProductVariantsAsync(int id, UpdateProductVariantsDTO updateProductVariants);  
         Task<ProductVariants?> DeleteProductVariantsAsync(int id);
     }
 }

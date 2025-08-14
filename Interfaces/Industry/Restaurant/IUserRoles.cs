@@ -6,7 +6,7 @@ namespace CWSERVER.Interfaces.Industry.Restaurant
     public interface IUserRoles
     {
         Task<List<UserRoles>> GetAllUserRolesAsync();
-        Task<UserRoles?> GetUserRolesById(int id);
+        Task<UserRoles?> GetUserRolesByIdAsync(int id);
         Task<UserRoles?> CreateUserRolesAsync(UserRoles userRoles);
         Task<UserRoles?> DeleteUserRoleAsync(int id);
     }

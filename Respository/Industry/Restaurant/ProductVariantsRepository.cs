@@ -10,7 +10,7 @@ namespace CWSERVER.Respository.Industry.Restaurant
     {
         private readonly ApiDbContext _dbContext = dbContext;
 
-        public async Task<ProductVariants?> CreateProductVariants(ProductVariants productVariants)
+        public async Task<ProductVariants?> CreateProductVariantsAsync(ProductVariants productVariants)
         {
             await _dbContext.ProductVariantss.AddAsync(productVariants);
             await _dbContext.SaveChangesAsync();
@@ -40,7 +40,7 @@ namespace CWSERVER.Respository.Industry.Restaurant
             return variants;
         }
 
-        public async Task<ProductVariants?> UpdateProductVariantsAsync(int id, UpdateProductVariants updateProductVariants)
+        public async Task<ProductVariants?> UpdateProductVariantsAsync(int id, UpdateProductVariantsDTO updateProductVariants)
         {
             var variants = await _dbContext.ProductVariantss.FirstOrDefaultAsync(v => v.ProductVariantId == id);
 

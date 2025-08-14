@@ -5199,11 +5199,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\USER\\Source\\Repos\\CW_RETAIL_BACKEND\\CWSERVER.csproj",
+      "projectUniqueName": "C:\\Users\\USER\\source\\repos\\CW_RETAIL_BACKEND\\CWSERVER.csproj",
       "projectName": "CWSERVER",
-      "projectPath": "C:\\Users\\USER\\Source\\Repos\\CW_RETAIL_BACKEND\\CWSERVER.csproj",
+      "projectPath": "C:\\Users\\USER\\source\\repos\\CW_RETAIL_BACKEND\\CWSERVER.csproj",
       "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\USER\\Source\\Repos\\CW_RETAIL_BACKEND\\obj\\",
+      "outputPath": "C:\\Users\\USER\\source\\repos\\CW_RETAIL_BACKEND\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5292,7 +5292,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

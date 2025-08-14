@@ -2,7 +2,7 @@
 
 namespace CWSERVER.Models.Industries.Restaurant.DTOs.ProductVariants
 {
-    public class UpdateProductVariants
+    public class UpdateProductVariantsDTO
     {
         [ForeignKey("Product")]
         public int ProductId { get; set; }

@@ -32,7 +32,7 @@ namespace CWSERVER.Respository.Industry.Restaurant
             return await _dbContext.UserRoless.ToListAsync();
         }
 
-        public async Task<UserRoles?> GetUserRolesById(int id)
+        public async Task<UserRoles?> GetUserRolesByIdAsync(int id)
         {
             var roles = await _dbContext.UserRoless.FirstOrDefaultAsync(r => r.UserRolesId == id);
 

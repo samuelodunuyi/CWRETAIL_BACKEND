@@ -2,7 +2,7 @@
 
 namespace CWSERVER.Models.Industries.Restaurant.DTOs.ProductVariants
 {
-    public class GetProductVariants
+    public class GetProductVariantsDTO
     {
         public int ProductVariantId { get; set; }
 

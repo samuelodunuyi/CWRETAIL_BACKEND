@@ -23,6 +23,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\Industries\Retail Store\" />
+    <Folder Include="Controllers\Industries\Pharmacy\" />
+    <Folder Include="Interfaces\Core\" />
+    <Folder Include="Interfaces\Industry\Retail Store\" />
+    <Folder Include="Interfaces\Industry\Pharmacy\" />
+    <Folder Include="Models\Industries\Retail Store\" />
+    <Folder Include="Models\Industries\Pharmacy\" />
+    <Folder Include="Respository\Core\" />
+    <Folder Include="Respository\Industry\Retail Store\" />
+    <Folder Include="Respository\Industry\Pharmacy\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

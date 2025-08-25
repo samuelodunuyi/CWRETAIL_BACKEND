@@ -10,7 +10,7 @@ namespace CWSERVER.Respository.Industry.Restaurant
         private readonly ApiDbContext _dbContext = dbContext;
         public async Task<List<AuditLogs>> GetAllAuditLogsAsyncs()
         {
-            return await _dbContext.AuditLogss.ToListAsync();
+            return await _dbContext.AuditLogs.ToListAsync();
         }
     }
 }

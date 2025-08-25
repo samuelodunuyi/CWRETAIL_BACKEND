@@ -2,7 +2,7 @@
 
 namespace CWSERVER.Models.Industries.Restaurant.Entities
 {
-    public class Permissions
+    public class Permission
     {
         [Key]
         public int PermissionId { get; set; }

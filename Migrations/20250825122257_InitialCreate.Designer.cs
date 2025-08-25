@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CWSERVER.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20250702221257_newcw")]
-    partial class newcw
+    [Migration("20250825122257_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace CWSERVER.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Category", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Category", b =>
                 {
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
@@ -45,7 +45,7 @@ namespace CWSERVER.Migrations
                     b.ToTable("Category", (string)null);
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Customer", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -85,7 +85,7 @@ namespace CWSERVER.Migrations
                     b.ToTable("Customer", (string)null);
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Employee", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -121,7 +121,7 @@ namespace CWSERVER.Migrations
                     b.ToTable("Employee", (string)null);
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Order", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -132,7 +132,7 @@ namespace CWSERVER.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerId")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("LastUpdatedAt")
@@ -144,9 +144,8 @@ namespace CWSERVER.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("StoreId")
                         .HasColumnType("int");
@@ -160,7 +159,7 @@ namespace CWSERVER.Migrations
                     b.ToTable("Order", (string)null);
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.OrderItem", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.OrderItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,7 +203,7 @@ namespace CWSERVER.Migrations
                     b.ToTable("OrderItem", (string)null);
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Product", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -261,7 +260,7 @@ namespace CWSERVER.Migrations
                     b.ToTable("Product", (string)null);
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.ProductImage", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.ProductImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -282,7 +281,7 @@ namespace CWSERVER.Migrations
                     b.ToTable("ProductImage", (string)null);
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.RefreshToken", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -316,7 +315,7 @@ namespace CWSERVER.Migrations
                     b.ToTable("RefreshToken", (string)null);
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Store", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Store", b =>
                 {
                     b.Property<int>("StoreId")
                         .ValueGeneratedOnAdd()
@@ -336,7 +335,7 @@ namespace CWSERVER.Migrations
                     b.ToTable("Store", (string)null);
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.User", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -415,6 +414,534 @@ namespace CWSERVER.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("User", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.AuditLogs", b =>
+                {
+                    b.Property<int>("AuditLogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuditLogId"));
+
+                    b.Property<string>("Action")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserAgent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AuditLogId");
+
+                    b.ToTable("AuditLogs", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.Categories", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.Ingredients", b =>
+                {
+                    b.Property<int>("IngredientId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IngredientId"));
+
+                    b.Property<string>("Allergens")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("CaloriesPerUnit")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal?>("CarbohydratesPerUnit")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("CostPerUnit")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("FatsPerUnit")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<bool>("IsGlutenFree")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVegan")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVegetarian")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("MinimumStockLevel")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("ProteinPerUnit")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SupplierCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SupplierName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UnitOfMeasure")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("IngredientId");
+
+                    b.ToTable("Ingredients", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.NutritionalInfo", b =>
+                {
+                    b.Property<int>("NutritionalInfoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NutritionalInfoId"));
+
+                    b.Property<decimal>("Calories")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal?>("Carbohydrates")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("Cholesterol")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("DietaryFiber")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Protein")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("SaturatedFat")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("ServingSize")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Sodium")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("Sugars")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("TotalFat")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("TransFat")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("NutritionalInfoId");
+
+                    b.ToTable("NutritionalInfo", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.Permission", b =>
+                {
+                    b.Property<int>("PermissionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PermissionId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Module")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PermissionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PermissionId");
+
+                    b.ToTable("Permissions", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.ProductVariants", b =>
+                {
+                    b.Property<int>("ProductVariantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductVariantId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("PriceModifier")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VariantName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VariantType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProductVariantId");
+
+                    b.ToTable("ProductVariants", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.Products", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
+
+                    b.Property<string>("Allergens")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Barcode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("BasePrice")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CookingTimeMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("CostPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CurrentStock")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsGlutenFree")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRecipe")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVegan")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVegetarian")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaximumStockLevel")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinimumStockLevel")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PrepTimeMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SKU")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SpiceLevel")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UnitOfMeasure")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ProductId");
+
+                    b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.Profiles", b =>
+                {
+                    b.Property<int>("ProfileId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProfileId"));
+
+                    b.Property<string>("AvatarURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ProfileId");
+
+                    b.ToTable("Profiles", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.RecipeIngredients", b =>
+                {
+                    b.Property<int>("RecipeIngredientsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeIngredientsId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IngredientsId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsOptional")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PreparationNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UnitOfMeasure")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RecipeIngredientsId");
+
+                    b.ToTable("RecipeIngredients", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.Recipes", b =>
+                {
+                    b.Property<int>("RecipeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeId"));
+
+                    b.Property<int>("CookingTimeMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Difficulty")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("EstimatedCost")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("Instructions")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PrepTimeMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Servings")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("RecipeId");
+
+                    b.ToTable("Recipes", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.Stores", b =>
+                {
+                    b.Property<int>("StoresId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StoresId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("StoresId");
+
+                    b.ToTable("Stores", (string)null);
+                });
+
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.UserRoles", b =>
+                {
+                    b.Property<int>("UserRolesId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserRolesId"));
+
+                    b.Property<string>("AssignedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserRolesId");
+
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -550,24 +1077,24 @@ namespace CWSERVER.Migrations
                     b.ToTable("UserToken", (string)null);
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Customer", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Customer", b =>
                 {
-                    b.HasOne("CWSERVER.Models.Entities.User", "User")
+                    b.HasOne("CWSERVER.Models.Core.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Employee", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Employee", b =>
                 {
-                    b.HasOne("CWSERVER.Models.Entities.Store", "Store")
+                    b.HasOne("CWSERVER.Models.Core.Entities.Store", "Store")
                         .WithMany()
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CWSERVER.Models.Entities.User", "User")
+                    b.HasOne("CWSERVER.Models.Core.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -578,15 +1105,13 @@ namespace CWSERVER.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Order", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Order", b =>
                 {
-                    b.HasOne("CWSERVER.Models.Entities.Customer", "Customer")
+                    b.HasOne("CWSERVER.Models.Core.Entities.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CustomerId");
 
-                    b.HasOne("CWSERVER.Models.Entities.Store", "Store")
+                    b.HasOne("CWSERVER.Models.Core.Entities.Store", "Store")
                         .WithMany()
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -597,9 +1122,9 @@ namespace CWSERVER.Migrations
                     b.Navigation("Store");
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.OrderItem", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.OrderItem", b =>
                 {
-                    b.HasOne("CWSERVER.Models.Entities.Order", "Order")
+                    b.HasOne("CWSERVER.Models.Core.Entities.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -608,15 +1133,15 @@ namespace CWSERVER.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Product", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Product", b =>
                 {
-                    b.HasOne("CWSERVER.Models.Entities.Category", "Category")
+                    b.HasOne("CWSERVER.Models.Core.Entities.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CWSERVER.Models.Entities.Store", "Store")
+                    b.HasOne("CWSERVER.Models.Core.Entities.Store", "Store")
                         .WithMany()
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -627,9 +1152,9 @@ namespace CWSERVER.Migrations
                     b.Navigation("Store");
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.ProductImage", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.ProductImage", b =>
                 {
-                    b.HasOne("CWSERVER.Models.Entities.Product", "Product")
+                    b.HasOne("CWSERVER.Models.Core.Entities.Product", "Product")
                         .WithMany("AdditionalImages")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -649,7 +1174,7 @@ namespace CWSERVER.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("CWSERVER.Models.Entities.User", null)
+                    b.HasOne("CWSERVER.Models.Core.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -658,7 +1183,7 @@ namespace CWSERVER.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("CWSERVER.Models.Entities.User", null)
+                    b.HasOne("CWSERVER.Models.Core.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -673,7 +1198,7 @@ namespace CWSERVER.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CWSERVER.Models.Entities.User", null)
+                    b.HasOne("CWSERVER.Models.Core.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -682,19 +1207,19 @@ namespace CWSERVER.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("CWSERVER.Models.Entities.User", null)
+                    b.HasOne("CWSERVER.Models.Core.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Order", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Entities.Product", b =>
+            modelBuilder.Entity("CWSERVER.Models.Core.Entities.Product", b =>
                 {
                     b.Navigation("AdditionalImages");
                 });

@@ -20,11 +20,11 @@ namespace CWSERVER.Data
         public DbSet<ProductImage> ProductImages { get; set; }
 
         // New Industry Models DBSet 
-        public DbSet<AuditLogs> AuditLogss { get; set; }
+        public DbSet<AuditLogs> AuditLogs { get; set; }
         public DbSet<Categories> Categoriess { get; set; }
         public DbSet<Ingredients> Ingredientss { get; set; }
         public DbSet<NutritionalInfo> NutritionalInfos { get; set; }
-        public DbSet<Permissions> Permissionss { get; set; }
+        public DbSet<Permission> Permissionss { get; set; }
         public DbSet<Products> Productss { get; set; }
         public DbSet<ProductVariants> ProductVariantss { get; set; }
         public DbSet<Profiles> Profiless { get; set; }
@@ -51,7 +51,7 @@ namespace CWSERVER.Data
             modelBuilder.Entity<Categories>().ToTable("Categories");
             modelBuilder.Entity<Ingredients>().ToTable("Ingredients");
             modelBuilder.Entity<NutritionalInfo>().ToTable("NutritionalInfo");
-            modelBuilder.Entity<Permissions>().ToTable("Permissions");
+            modelBuilder.Entity<Permission>().ToTable("Permissions");
             modelBuilder.Entity<Products>().ToTable("Products");
             modelBuilder.Entity<ProductVariants>().ToTable("ProductVariants");
             modelBuilder.Entity<Profiles>().ToTable("Profiles");
@@ -68,7 +68,7 @@ namespace CWSERVER.Data
                 .HasKey(a => a.IngredientId);
             modelBuilder.Entity<NutritionalInfo>()
                 .HasKey(a => a.NutritionalInfoId);
-            modelBuilder.Entity<Permissions>()
+            modelBuilder.Entity<Permission>()
                 .HasKey(a => a.PermissionId);
             modelBuilder.Entity<Products>()
                 .HasKey(a => a.ProductId);
@@ -77,7 +77,7 @@ namespace CWSERVER.Data
             modelBuilder.Entity<Profiles>()
                 .HasKey(a => a.ProfileId);
             modelBuilder.Entity<RecipeIngredients>()
-                .HasKey(a => a.RecipeId);
+                .HasKey(a => a.RecipeIngredientsId);
             modelBuilder.Entity<Recipes>()
                 .HasKey(a => a.RecipeId);
             modelBuilder.Entity<Stores>()

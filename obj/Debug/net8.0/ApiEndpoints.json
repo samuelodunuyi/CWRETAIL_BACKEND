@@ -667,7 +667,7 @@
     "Parameters": [
       {
         "Name": "permission",
-        "Type": "CWSERVER.Models.Industries.Restaurant.Entities.Permissions",
+        "Type": "CWSERVER.Models.Industries.Restaurant.Entities.Permission",
         "IsRequired": true
       }
     ],

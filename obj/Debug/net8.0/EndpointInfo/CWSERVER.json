@@ -1055,17 +1055,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Permissions"
+                "$ref": "#/components/schemas/Permission"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Permissions"
+                "$ref": "#/components/schemas/Permission"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Permissions"
+                "$ref": "#/components/schemas/Permission"
               }
             }
           }
@@ -2646,7 +2646,7 @@
         },
         "additionalProperties": false
       },
-      "Permissions": {
+      "Permission": {
         "type": "object",
         "properties": {
           "permissionId": {

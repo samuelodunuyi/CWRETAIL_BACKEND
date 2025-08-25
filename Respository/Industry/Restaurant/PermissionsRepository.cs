@@ -8,14 +8,14 @@ namespace CWSERVER.Respository.Industry.Restaurant
     public class PermissionsRepository(ApiDbContext dbContext) : IPermissions
     {
         private readonly ApiDbContext _dbContext = dbContext;
-        public async Task<Permissions?> CreatePermissionsAsync(Permissions permissions)
+        public async Task<Permission?> CreatePermissionsAsync(Permission permissions)
         {
             await _dbContext.Permissionss.AddAsync(permissions);
             await _dbContext.SaveChangesAsync();
             return permissions;
         }
 
-        public async Task<Permissions?> DeletePermissionAsync(int id)
+        public async Task<Permission?> DeletePermissionAsync(int id)
         {
             var permission = await _dbContext.Permissionss.FirstOrDefaultAsync(per => per.PermissionId == id);
 
@@ -27,12 +27,12 @@ namespace CWSERVER.Respository.Industry.Restaurant
             return permission;
         }
 
-        public async Task<List<Permissions>> GetAllPermissionsAsync()
+        public async Task<List<Permission>> GetAllPermissionsAsync()
         {
             return await _dbContext.Permissionss.ToListAsync();
         }
 
-        public async Task<Permissions?> GetPermissionsByIdAsync(int id)
+        public async Task<Permission?> GetPermissionsByIdAsync(int id)
         {
             var permission = await _dbContext.Permissionss.FirstOrDefaultAsync(per => per.PermissionId == id);
 
@@ -42,7 +42,7 @@ namespace CWSERVER.Respository.Industry.Restaurant
             return permission;
         }
 
-        public Task<Permissions?> GetPermissionsByUserIdAsync(int userId)
+        public Task<Permission?> GetPermissionsByUserIdAsync(int userId)
         {
             throw new NotImplementedException();
         }

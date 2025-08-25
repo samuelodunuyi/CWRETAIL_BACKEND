@@ -43,7 +43,7 @@ namespace CWSERVER.Controllers.Industries.Restaurants
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePermission([FromBody] Permissions permission)
+        public async Task<IActionResult> CreatePermission([FromBody] Permission permission)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

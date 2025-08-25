@@ -5,10 +5,10 @@ namespace CWSERVER.Interfaces.Industry.Restaurant
 {
     public interface IPermissions
     {
-        Task<List<Permissions>> GetAllPermissionsAsync();
-        Task<Permissions?> GetPermissionsByIdAsync(int id);
-        Task<Permissions?> GetPermissionsByUserIdAsync(int userId);
-        Task<Permissions?> CreatePermissionsAsync(Permissions permissions);
-        Task<Permissions?> DeletePermissionAsync(int id);
+        Task<List<Permission>> GetAllPermissionsAsync();
+        Task<Permission?> GetPermissionsByIdAsync(int id);
+        Task<Permission?> GetPermissionsByUserIdAsync(int userId);
+        Task<Permission?> CreatePermissionsAsync(Permission permissions);
+        Task<Permission?> DeletePermissionAsync(int id);
     }
 }

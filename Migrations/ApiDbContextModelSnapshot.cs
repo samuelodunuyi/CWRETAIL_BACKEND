@@ -603,7 +603,7 @@ namespace CWSERVER.Migrations
                     b.ToTable("NutritionalInfo", (string)null);
                 });
 
-            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.Permissions", b =>
+            modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.Permission", b =>
                 {
                     b.Property<int>("PermissionId")
                         .ValueGeneratedOnAdd()
@@ -789,11 +789,11 @@ namespace CWSERVER.Migrations
 
             modelBuilder.Entity("CWSERVER.Models.Industries.Restaurant.Entities.RecipeIngredients", b =>
                 {
-                    b.Property<int>("RecipeId")
+                    b.Property<int>("RecipeIngredientsId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeIngredientsId"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -810,13 +810,13 @@ namespace CWSERVER.Migrations
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int>("RecipeIngredientsId")
+                    b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
                     b.Property<string>("UnitOfMeasure")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("RecipeId");
+                    b.HasKey("RecipeIngredientsId");
 
                     b.ToTable("RecipeIngredients", (string)null);
                 });

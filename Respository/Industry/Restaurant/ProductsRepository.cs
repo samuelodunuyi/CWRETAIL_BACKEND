@@ -1,7 +1,8 @@
-﻿using CWSERVER.Data;
+using CWSERVER.Data;
 using CWSERVER.Interfaces.Industry.Restaurant;
 using CWSERVER.Models.Industries.Restaurant.DTOs.Products;
 using CWSERVER.Models.Industries.Restaurant.Entities;
+using CWSERVER.Models.Core.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace CWSERVER.Respository.Industry.Restaurant
@@ -72,6 +73,18 @@ namespace CWSERVER.Respository.Industry.Restaurant
             product.ImageUrl = updateProductsDTO.ImageUrl;
             product.UpdatedAt = updateProductsDTO.UpdatedAt;
 
+            await _dbContext.SaveChangesAsync();
+            return product;
+        }
+
+        public async Task<Products?> RestockProductAsync(int id, ProductRestockDTO restockDto)
+        {
+            var product = await _dbContext.Productss.FirstOrDefaultAsync(p => p.ProductId == id);
+
+            if (product == null)
+                return null;
+
+            product.CurrentStock += restockDto.AmountToAdd;
             await _dbContext.SaveChangesAsync();
             return product;
         }

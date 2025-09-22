@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CWSERVER.Models.Industries.Restaurant.DTOs.Ingredients
 {
@@ -35,7 +35,7 @@ namespace CWSERVER.Models.Industries.Restaurant.DTOs.Ingredients
         public bool IsGlutenFree { get; set; } = false;
         public string? SupplierName { get; set; }
         public string? SupplierCode { get; set; }
-        public string? Status { get; set; }
+        public int Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

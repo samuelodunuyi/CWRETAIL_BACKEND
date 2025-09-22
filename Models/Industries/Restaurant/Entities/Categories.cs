@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CWSERVER.Models.Industries.Restaurant.Entities
@@ -14,7 +14,7 @@ namespace CWSERVER.Models.Industries.Restaurant.Entities
         //public string? ParenttId { get; set; }
 
         [ForeignKey("Stores")]
-        public int StoreId { get; set; }
+        public int? StoreId { get; set; }
         public int DisplayOrder { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

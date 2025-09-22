@@ -1,4 +1,4 @@
-﻿using CWSERVER.Data;
+using CWSERVER.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,23 +7,30 @@ using Microsoft.AspNetCore.Hosting;
 using System.Linq;
 using CWSERVER.Models.Core.DTOs;
 using CWSERVER.Models.Core.Entities;
+using CWSERVER.Services;
 
 namespace CWSERVER.Controllers.Core
 {
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
         private readonly ApiDbContext dbContext;
-        private readonly IWebHostEnvironment hostingEnvironment;
-        private readonly IHttpContextAccessor httpContextAccessor;
+    private readonly IWebHostEnvironment hostingEnvironment;
+    private readonly IHttpContextAccessor httpContextAccessor;
+    private readonly IUserContextService userContextService;
 
-        public ProductController(ApiDbContext dbContext, IWebHostEnvironment hostingEnvironment, IHttpContextAccessor httpContextAccessor)
-        {
-            this.dbContext = dbContext;
-            this.hostingEnvironment = hostingEnvironment;
-            this.httpContextAccessor = httpContextAccessor;
-        }
+    public ProductController(
+        ApiDbContext dbContext, 
+        IWebHostEnvironment hostingEnvironment, 
+        IHttpContextAccessor httpContextAccessor,
+        IUserContextService userContextService)
+    {
+        this.dbContext = dbContext;
+        this.hostingEnvironment = hostingEnvironment;
+        this.httpContextAccessor = httpContextAccessor;
+        this.userContextService = userContextService;
+    }
 
         private string SaveImageAndGetPath(IFormFile imageFile, int productId)
         {
@@ -201,90 +208,105 @@ namespace CWSERVER.Controllers.Core
 
 
         [Authorize]
-        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPost]
         public async Task<IActionResult> CreateProduct(
             [FromForm] ProductCreateDTO productDto,
-            [FromForm] IFormFile? mainImage,
-            [FromForm] List<IFormFile>? additionalImages)
-
+            IFormFile? mainImage,
+            List<IFormFile>? additionalImages)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var product = new Product
+            try
             {
-                ProductName = productDto.ProductName,
-                CategoryId = productDto.CategoryId,
-                StoreId = productDto.StoreId,
-                ProductLabel = productDto.ProductLabel,
-                ProductAmountInStock = productDto.ProductAmountInStock,
-                ProductPrice = productDto.ProductPrice,
-                ProductOriginalPrice = productDto.ProductOriginalPrice,
-                ProductDescription = productDto.ProductDescription,
-                ProductSKU = productDto.ProductSKU
-            };
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-            dbContext.Products.Add(product);
-            await dbContext.SaveChangesAsync();
+                // Validate foreign key references
+                var categoryExists = await dbContext.Categories.AnyAsync(c => c.CategoryId == productDto.CategoryId);
+                if (!categoryExists)
+                    return BadRequest($"Category with ID {productDto.CategoryId} does not exist.");
 
-            
-            if (mainImage != null)
-            {
-                var imagePath = SaveImageAndGetPath(mainImage, product.ProductId);
-                product.MainImagePath = imagePath;
-            }
+                var storeExists = await dbContext.Stores.AnyAsync(s => s.StoreId == productDto.StoreId);
+                if (!storeExists)
+                    return BadRequest($"Store with ID {productDto.StoreId} does not exist.");
 
-            
-            if (additionalImages != null && additionalImages.Count != 0)
-            {
-                foreach (var image in additionalImages)
+                // Validate required fields
+                if (string.IsNullOrWhiteSpace(productDto.ProductName))
+                    return BadRequest("Product name is required");
+
+                if (productDto.ProductPrice <= 0)
+                    return BadRequest("Product price must be greater than zero");
+
+                var product = new Product
                 {
-                    var imagePath = SaveImageAndGetPath(image, product.ProductId);
-                    product.AdditionalImages.Add(new ProductImage { ImagePath = imagePath });
+                    ProductName = productDto.ProductName,
+                    CategoryId = productDto.CategoryId,
+                    StoreId = productDto.StoreId,
+                    ProductLabel = productDto.ProductLabel,
+                    ProductAmountInStock = 0, // Default to 0, use restock endpoint to add inventory
+                    ProductPrice = productDto.ProductPrice,
+                    ProductOriginalPrice = productDto.ProductOriginalPrice,
+                    ProductDescription = productDto.ProductDescription ?? string.Empty,
+                    ProductSKU = productDto.ProductSKU ?? string.Empty,
+                    LowStockWarningCount = productDto.LowStockWarningCount,
+                    Status = productDto.Status,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = userContextService.GetCurrentUsername()
+                };
+
+                dbContext.Products.Add(product);
+                await dbContext.SaveChangesAsync();
+
+                if (mainImage != null)
+                {
+                    if (!mainImage.ContentType.StartsWith("image/"))
+                        return BadRequest("Main image file must be an image");
+                        
+                    var imagePath = SaveImageAndGetPath(mainImage, product.ProductId);
+                    product.MainImagePath = imagePath;
                 }
-            }
 
-            await dbContext.SaveChangesAsync();
-
-            var response = new ProductResponseDTO
-            {
-                ProductId = product.ProductId,
-                ProductName = product.ProductName,
-                CategoryId = product.CategoryId,
-                CategoryName = product.Category?.CategoryName,
-                StoreId = product.StoreId,
-                StoreName = product.Store?.StoreName,
-                MainImageUrl = product.MainImagePath,
-                AdditionalImages = product.AdditionalImages.Select(i => new ProductImageDTO
+                if (additionalImages != null && additionalImages.Count != 0)
                 {
-                    Id = i.Id,
-                    ImageUrl = i.ImagePath ?? ""
-                }).ToList(),
-                ProductLabel = product.ProductLabel,
-                ProductAmountInStock = product.ProductAmountInStock,
-                ProductPrice = product.ProductPrice,
-                ProductOriginalPrice = product.ProductOriginalPrice,
-                ProductDescription = product.ProductDescription,
-                ProductSKU = product.ProductSKU,
-                Status = product.Status,
-                LowStockWarningCount = product.LowStockWarningCount,
-            };
+                    foreach (var image in additionalImages)
+                    {
+                        if (!image.ContentType.StartsWith("image/"))
+                            return BadRequest("All additional image files must be images");
+                            
+                        var imagePath = SaveImageAndGetPath(image, product.ProductId);
+                        product.AdditionalImages.Add(new ProductImage { ImagePath = imagePath });
+                    }
+                }
 
-            return Ok(response);
+                await dbContext.SaveChangesAsync();
 
+                var response = await MapProductAsync(product);
+                return Ok(response);
+            }
+            catch (DbUpdateException dbEx)
+            {
+                return StatusCode(500, "Database error occurred while saving product: " + dbEx.Message);
+            }
+            catch (IOException ioEx)
+            {
+                return StatusCode(500, "File operation error: " + ioEx.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An unexpected error occurred: " + ex.Message);
+            }
         }
 
 
         [Authorize]
-        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateProduct(
         int id,
-        [FromForm] ProductCreateDTO productDto,
-        [FromForm] IFormFile? mainImage,
-        [FromForm] List<IFormFile>? additionalImages)
+        [FromForm] ProductUpdateDTO productDto,
+        IFormFile? mainImage,
+        List<IFormFile>? additionalImages)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             var product = await dbContext.Products
                 .Include(p => p.AdditionalImages)
                 .FirstOrDefaultAsync(p => p.ProductId == id);
@@ -292,17 +314,28 @@ namespace CWSERVER.Controllers.Core
             if (product == null)
                 return NotFound();
 
+            // Validate foreign key references
+            var categoryExists = await dbContext.Categories.AnyAsync(c => c.CategoryId == productDto.CategoryId);
+            if (!categoryExists)
+                return BadRequest($"Category with ID {productDto.CategoryId} does not exist.");
+
+            var storeExists = await dbContext.Stores.AnyAsync(s => s.StoreId == productDto.StoreId);
+            if (!storeExists)
+                return BadRequest($"Store with ID {productDto.StoreId} does not exist.");
+
             product.ProductName = productDto.ProductName ?? "";
             product.CategoryId = productDto.CategoryId;
             product.StoreId = productDto.StoreId;
             product.ProductLabel = productDto.ProductLabel;
-            product.ProductAmountInStock = productDto.ProductAmountInStock;
+            // Note: ProductAmountInStock is not updated here, use restock endpoint
             product.ProductPrice = productDto.ProductPrice;
             product.ProductOriginalPrice = productDto.ProductOriginalPrice;
             product.ProductDescription = productDto.ProductDescription;
             product.ProductSKU = productDto.ProductSKU ?? "";
             product.LowStockWarningCount = productDto.LowStockWarningCount;
             product.Status = productDto.Status;
+            product.UpdatedAt = DateTime.UtcNow;
+            product.UpdatedBy = "System"; // TODO: Get from authenticated user
 
             if (mainImage != null)
             {
@@ -337,13 +370,12 @@ namespace CWSERVER.Controllers.Core
 
 
         [Authorize]
-        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchProduct(
         int id,
-        [FromForm] ProductCreateDTO productDto,
-        [FromForm] IFormFile? mainImage,
-        [FromForm] List<IFormFile>? additionalImages)
+        [FromForm] ProductUpdateDTO productDto,
+        IFormFile? mainImage,
+        List<IFormFile>? additionalImages)
         {
             var product = await dbContext.Products
                 .Include(p => p.AdditionalImages)
@@ -352,11 +384,26 @@ namespace CWSERVER.Controllers.Core
             if (product == null)
                 return NotFound();
 
+            // Validate foreign key references if they are being updated
+            if (productDto.CategoryId != 0)
+            {
+                var categoryExists = await dbContext.Categories.AnyAsync(c => c.CategoryId == productDto.CategoryId);
+                if (!categoryExists)
+                    return BadRequest($"Category with ID {productDto.CategoryId} does not exist.");
+            }
+
+            if (productDto.StoreId != 0)
+            {
+                var storeExists = await dbContext.Stores.AnyAsync(s => s.StoreId == productDto.StoreId);
+                if (!storeExists)
+                    return BadRequest($"Store with ID {productDto.StoreId} does not exist.");
+            }
+
             if (!string.IsNullOrEmpty(productDto.ProductName)) product.ProductName = productDto.ProductName;
             if (productDto.CategoryId != 0) product.CategoryId = productDto.CategoryId;
             if (productDto.StoreId != 0) product.StoreId = productDto.StoreId;
             if (!string.IsNullOrEmpty(productDto.ProductLabel)) product.ProductLabel = productDto.ProductLabel;
-            if (productDto.ProductAmountInStock != 0) product.ProductAmountInStock = productDto.ProductAmountInStock;
+            // Note: ProductAmountInStock is not updated here, use restock endpoint
             if (productDto.ProductPrice != 0) product.ProductPrice = productDto.ProductPrice;
             if (productDto.ProductOriginalPrice.HasValue) product.ProductOriginalPrice = productDto.ProductOriginalPrice;
             if (!string.IsNullOrEmpty(productDto.ProductDescription)) product.ProductDescription = productDto.ProductDescription;
@@ -364,6 +411,8 @@ namespace CWSERVER.Controllers.Core
 
             product.LowStockWarningCount = productDto.LowStockWarningCount;
             product.Status = productDto.Status;
+            product.UpdatedAt = DateTime.UtcNow;
+            product.UpdatedBy = "System"; // TODO: Get from authenticated user
 
             if (mainImage != null)
             {
@@ -407,11 +456,6 @@ namespace CWSERVER.Controllers.Core
             return Ok(result);
 
         }
-
-
-
-
-
 
         [Authorize]
         [HttpDelete("{id}")]

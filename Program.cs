@@ -1,6 +1,7 @@
 // Program.cs
 using CWSERVER.Data;
 using CWSERVER.Filters;
+using CWSERVER.Middleware;
 using CWSERVER.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -69,6 +70,12 @@ builder.Services.AddSwaggerGen(options =>
         { securityScheme, Array.Empty<string>() }
     });
 
+    // Configure Swagger to handle file uploads
+    options.OperationFilter<SwaggerFileOperationFilter>();
+    
+    // Hide auto-generated fields from input models
+    options.SchemaFilter<SwaggerHideFieldsFilter>();
+
     // Optional: Include XML comments if you have them
     // var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     // var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -78,6 +85,7 @@ builder.Services.AddSwaggerGen(options =>
 
 
 builder.Services.AddScoped<ActiveUserFilter>();
+builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddScoped<IAuditLogs, AuditLogsRepository>();
 builder.Services.AddScoped<ICategories, CategoriesRepository>();
 builder.Services.AddScoped<IIngredients, IngredientsRepository>();
@@ -207,6 +215,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+else
+{
+    app.UseMiddleware<ErrorHandlingMiddleware>();
 }
 
 app.UseCors("VueCorsPolicy");

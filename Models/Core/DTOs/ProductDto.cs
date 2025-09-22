@@ -1,21 +1,70 @@
-﻿namespace CWSERVER.Models.Core.DTOs
+using System.ComponentModel.DataAnnotations;
+
+namespace CWSERVER.Models.Core.DTOs
 {
     public class ProductCreateDTO
     {
+        [Required]
         public string? ProductName { get; set; }
+        
+        [Required]
         public int CategoryId { get; set; }  // required
+        
+        [Required]
         public int StoreId { get; set; }     // required
 
         public string? ProductLabel { get; set; }
-        public int ProductAmountInStock { get; set; }
+        // ProductAmountInStock removed - will default to 0
+        
+        [Required]
         public decimal ProductPrice { get; set; }
         public decimal? ProductOriginalPrice { get; set; }
         public string? ProductDescription { get; set; }
+        
+        [Required]
         public string? ProductSKU { get; set; }
         public int LowStockWarningCount { get; set; } = 0;
         public bool Status { get; set; } = true;
 
         public List<int>? DeleteImageIds { get; set; }
+    }
+    
+    public class ProductUpdateDTO
+    {
+        [Required]
+        public string? ProductName { get; set; }
+        
+        [Required]
+        public int CategoryId { get; set; }
+        
+        [Required]
+        public int StoreId { get; set; }
+
+        public string? ProductLabel { get; set; }
+        // ProductAmountInStock removed - use restock endpoint
+        
+        [Required]
+        public decimal ProductPrice { get; set; }
+        public decimal? ProductOriginalPrice { get; set; }
+        public string? ProductDescription { get; set; }
+        
+        [Required]
+        public string? ProductSKU { get; set; }
+        public int LowStockWarningCount { get; set; } = 0;
+        public bool Status { get; set; } = true;
+
+        public List<int>? DeleteImageIds { get; set; }
+    }
+    
+    public class ProductRestockDTO
+    {
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Stock amount must be greater than 0")]
+        public int StockAmount { get; set; }
+        
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Amount to add must be greater than 0")]
+        public int AmountToAdd { get; set; }
     }
 
 

@@ -1,4 +1,4 @@
-﻿using CWSERVER.Models.Core.DTOs;
+using CWSERVER.Models.Core.DTOs;
 using CWSERVER.Models.Core.Entities;
 using CWSERVER.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace CWSERVER.Controllers.Core
 {
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
     [ApiController]
     public class AuthController(IAuthService authService, UserManager<User> userManager) : ControllerBase
     {

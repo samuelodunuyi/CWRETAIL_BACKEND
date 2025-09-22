@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CWSERVER.Models.Industries.Restaurant.Entities
@@ -15,7 +15,7 @@ namespace CWSERVER.Models.Industries.Restaurant.Entities
 
         public string? Phone { get; set; }
         public string? Email { get; set; }
-        public string? Status { get; set; }
+        public int Status { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt {  get; set; }
     }

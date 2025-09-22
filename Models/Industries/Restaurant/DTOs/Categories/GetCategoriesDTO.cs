@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CWSERVER.Models.Industries.Restaurant.DTOs.Categories
@@ -13,7 +13,7 @@ namespace CWSERVER.Models.Industries.Restaurant.DTOs.Categories
         //public string? ParenttId { get; set; }
 
         [Required]
-        public int StoreId { get; set; }
+        public int? StoreId { get; set; }
         public int DisplayOrder { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }

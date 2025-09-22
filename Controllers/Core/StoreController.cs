@@ -1,72 +1,133 @@
-﻿using CWSERVER.Data;
+using CWSERVER.Data;
 using CWSERVER.Models.Core.Entities;
+using CWSERVER.Models.Core.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CWSERVER.Controllers.Core
 {
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
     [ApiController]
     public class StoreController(ApiDbContext dbContext) : ControllerBase
     {
         private readonly ApiDbContext dbContext = dbContext;
 
         [HttpGet]
-        public IActionResult GetAllStores([FromQuery] string? name)
+        public async Task<IActionResult> GetAllStores([FromQuery] string? name)
         {
             var query = dbContext.Stores.AsQueryable();
 
             if (!string.IsNullOrEmpty(name))
                 query = query.Where(s => s.StoreName!.Contains(name));
 
-            return Ok(query.ToList());
+            var stores = await query.ToListAsync();
+            var storeResponseDtos = stores.Select(s => new StoreResponseDTO
+            {
+                StoreId = s.StoreId,
+                StoreName = s.StoreName,
+                StoreRep = s.StoreRep,
+                CreatedAt = s.CreatedAt,
+                UpdatedAt = s.UpdatedAt,
+                CreatedBy = s.CreatedBy,
+                UpdatedBy = s.UpdatedBy
+            }).ToList();
+
+            return Ok(storeResponseDtos);
         }
 
       
         [HttpGet("{id}")]
-        public IActionResult GetStoreById(int id)
+        public async Task<IActionResult> GetStoreById(int id)
         {
-            var store = dbContext.Stores.Find(id);
+            var store = await dbContext.Stores.FirstOrDefaultAsync(s => s.StoreId == id);
             if (store == null) return NotFound();
-            return Ok(store);
+
+            var storeResponseDto = new StoreResponseDTO
+            {
+                StoreId = store.StoreId,
+                StoreName = store.StoreName,
+                StoreRep = store.StoreRep,
+                CreatedAt = store.CreatedAt,
+                UpdatedAt = store.UpdatedAt,
+                CreatedBy = store.CreatedBy,
+                UpdatedBy = store.UpdatedBy
+            };
+
+            return Ok(storeResponseDto);
         }
 
        
         [HttpPost]
-        public IActionResult CreateStore([FromBody] Store store)
+        public async Task<IActionResult> CreateStore([FromBody] StoreCreateDTO storeDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var store = new Store
+            {
+                StoreName = storeDto.StoreName,
+                StoreRep = storeDto.StoreRep,
+                CreatedAt = DateTime.UtcNow,
+                CreatedBy = "System" // TODO: Get from authenticated user
+            };
+
             dbContext.Stores.Add(store);
-            dbContext.SaveChanges();
-            return CreatedAtAction(nameof(GetStoreById), new { id = store.StoreId }, store);
+            await dbContext.SaveChangesAsync();
+
+            var storeResponseDto = new StoreResponseDTO
+            {
+                StoreId = store.StoreId,
+                StoreName = store.StoreName,
+                StoreRep = store.StoreRep,
+                CreatedAt = store.CreatedAt,
+                UpdatedAt = store.UpdatedAt,
+                CreatedBy = store.CreatedBy,
+                UpdatedBy = store.UpdatedBy
+            };
+
+            return CreatedAtAction(nameof(GetStoreById), new { id = store.StoreId }, storeResponseDto);
         }
 
       
         [HttpPut("{id}")]
-        public IActionResult UpdateStore(int id, [FromBody] Store updatedStore)
+        public async Task<IActionResult> UpdateStore(int id, [FromBody] StoreUpdateDTO storeDto)
         {
-            if (id != updatedStore.StoreId)
-                return BadRequest("Store ID mismatch.");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var store = dbContext.Stores.Find(id);
+            var store = await dbContext.Stores.FirstOrDefaultAsync(s => s.StoreId == id);
             if (store == null) return NotFound();
 
-            dbContext.Entry(store).CurrentValues.SetValues(updatedStore);
-            dbContext.SaveChanges();
-            return NoContent();
+            store.StoreName = storeDto.StoreName;
+            store.StoreRep = storeDto.StoreRep;
+            store.UpdatedAt = DateTime.UtcNow;
+            store.UpdatedBy = "System"; // TODO: Get from authenticated user
+
+            await dbContext.SaveChangesAsync();
+
+            var storeResponseDto = new StoreResponseDTO
+            {
+                StoreId = store.StoreId,
+                StoreName = store.StoreName,
+                StoreRep = store.StoreRep,
+                CreatedAt = store.CreatedAt,
+                UpdatedAt = store.UpdatedAt,
+                CreatedBy = store.CreatedBy,
+                UpdatedBy = store.UpdatedBy
+            };
+
+            return Ok(storeResponseDto);
         }
 
         
         [HttpDelete("{id}")]
-        public IActionResult DeleteStore(int id)
+        public async Task<IActionResult> DeleteStore(int id)
         {
-            var store = dbContext.Stores.Find(id);
+            var store = await dbContext.Stores.FirstOrDefaultAsync(s => s.StoreId == id);
             if (store == null) return NotFound();
 
             dbContext.Stores.Remove(store);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
             return NoContent();
         }
     }

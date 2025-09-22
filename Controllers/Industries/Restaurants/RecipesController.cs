@@ -1,4 +1,4 @@
-﻿using CWSERVER.Interfaces.Industry.Restaurant;
+using CWSERVER.Interfaces.Industry.Restaurant;
 using CWSERVER.Models.Industries.Restaurant.DTOs.Recipes;
 using CWSERVER.Models.Industries.Restaurant.Entities;
 using Microsoft.AspNetCore.Http;
@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CWSERVER.Controllers.Industries.Restaurants
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/restaurant/[controller]")]
     [ApiController]
     public class RecipesController(IRecipes recipeRepo) : ControllerBase
     {

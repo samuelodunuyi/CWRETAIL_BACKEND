@@ -1,4 +1,4 @@
-﻿namespace CWSERVER.Models.Core.DTOs
+namespace CWSERVER.Models.Core.DTOs
 {
     public class UserDataResponse
     {
@@ -7,7 +7,7 @@
         public string? Role { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime LastUpdatedAt { get; set; }
+        public DateTime? LastUpdatedAt { get; set; }
         public string? LastUpdatedBy { get; set; }
 
         //added these
@@ -18,7 +18,7 @@
         public string? StoreName { get; set; }
         //
 
-        public EmployeeDto? EmployeeData { get; set; }
-        public CustomerDto? CustomerData { get; set; }
+        public EmployeeResponseDTO? EmployeeData { get; set; }
+        public CustomerResponseDTO? CustomerData { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CWSERVER.Models.Industries.Restaurant.DTOs.Recipes
 {
@@ -21,7 +21,7 @@ namespace CWSERVER.Models.Industries.Restaurant.DTOs.Recipes
         public decimal EstimatedCost { get; set; }
         [ForeignKey("User")]
         public string? CreatedBy { get; set; }
-        public string? Status { get; set; }
+        public int Status { get; set; }
         public int Version { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

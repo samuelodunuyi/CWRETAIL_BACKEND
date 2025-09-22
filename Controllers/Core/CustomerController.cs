@@ -1,4 +1,4 @@
-﻿using CWSERVER.Data;
+using CWSERVER.Data;
 using CWSERVER.Models.Core.Entities;
 using CWSERVER.Models.Core.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace CWSERVER.Controllers.Core
 {
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
     [ApiController]
     [Authorize]
     public class CustomerController(ApiDbContext context, UserManager<User> userManager) : ControllerBase
@@ -50,7 +50,7 @@ namespace CWSERVER.Controllers.Core
             var customers = await query.ToListAsync();
 
            
-            var result = customers.Select(c => new CustomerDto
+            var result = customers.Select(c => new CustomerResponseDTO
             {
                 Id = c.Id,
                 UserId = c.UserId,
@@ -59,7 +59,9 @@ namespace CWSERVER.Controllers.Core
                 Email = c.Email,
                 PhoneNumber = c.PhoneNumber,
                 CreatedBy = c.CreatedBy,
-                CreatedAt = c.CreatedAt
+                CreatedAt = c.CreatedAt,
+                UpdatedAt = c.UpdatedAt,
+                UpdatedBy = c.UpdatedBy
             });
 
             return Ok(result);
@@ -72,7 +74,7 @@ namespace CWSERVER.Controllers.Core
             if (customer == null) return NotFound();
 
             
-            var result = new CustomerDto
+            var result = new CustomerResponseDTO
             {
                 Id = customer.Id,
                 UserId = customer.UserId,
@@ -81,7 +83,9 @@ namespace CWSERVER.Controllers.Core
                 Email = customer.Email,
                 PhoneNumber = customer.PhoneNumber,
                 CreatedBy = customer.CreatedBy,
-                CreatedAt = customer.CreatedAt
+                CreatedAt = customer.CreatedAt,
+                UpdatedAt = customer.UpdatedAt,
+                UpdatedBy = customer.UpdatedBy
             };
 
             return Ok(result);
@@ -89,31 +93,75 @@ namespace CWSERVER.Controllers.Core
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateCustomer([FromBody] Customer customer)
+        public async Task<IActionResult> CreateCustomer([FromBody] CustomerCreateDTO customerDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            // Validate foreign key reference if UserId is provided
+            if (customerDto.UserId != null)
+            {
+                var userExists = await _userManager.FindByIdAsync(customerDto.UserId);
+                if (userExists == null)
+                    return BadRequest($"User with ID {customerDto.UserId} does not exist.");
+            }
+
+            var customer = new Customer
+            {
+                UserId = customerDto.UserId,
+                FirstName = customerDto.FirstName,
+                LastName = customerDto.LastName,
+                Email = customerDto.Email,
+                PhoneNumber = customerDto.PhoneNumber,
+                CreatedAt = DateTime.UtcNow
+            };
 
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 var currentUser = await _userManager.GetUserAsync(User);
                 customer.CreatedBy = currentUser?.Email;
             }
+            else
+            {
+                customer.CreatedBy = "System";
+            }
 
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCustomerById), new { id = customer.Id }, customer);
+            var result = new CustomerResponseDTO
+            {
+                Id = customer.Id,
+                UserId = customer.UserId,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                PhoneNumber = customer.PhoneNumber,
+                CreatedBy = customer.CreatedBy,
+                CreatedAt = customer.CreatedAt,
+                UpdatedAt = customer.UpdatedAt,
+                UpdatedBy = customer.UpdatedBy
+            };
+
+            return CreatedAtAction(nameof(GetCustomerById), new { id = customer.Id }, result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomer(int id, [FromBody] Customer updatedCustomer)
+        public async Task<IActionResult> UpdateCustomer(int id, [FromBody] CustomerUpdateDTO customerDto)
         {
-            if (id != updatedCustomer.Id)
-                return BadRequest("ID mismatch");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
             var existingCustomer = await _context.Customers.FindAsync(id);
             if (existingCustomer == null) return NotFound();
+
+            // Validate foreign key reference if UserId is provided
+            if (customerDto.UserId != null)
+            {
+                var userExists = await _userManager.FindByIdAsync(customerDto.UserId);
+                if (userExists == null)
+                    return BadRequest($"User with ID {customerDto.UserId} does not exist.");
+            }
 
            
             if (User.IsInRole("Customer"))
@@ -129,10 +177,40 @@ namespace CWSERVER.Controllers.Core
                     return Forbid();
             }
 
-            _context.Entry(existingCustomer).CurrentValues.SetValues(updatedCustomer);
+            existingCustomer.UserId = customerDto.UserId;
+            existingCustomer.FirstName = customerDto.FirstName;
+            existingCustomer.LastName = customerDto.LastName;
+            existingCustomer.Email = customerDto.Email;
+            existingCustomer.PhoneNumber = customerDto.PhoneNumber;
+            existingCustomer.UpdatedAt = DateTime.UtcNow;
+
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+                existingCustomer.UpdatedBy = currentUser?.Email;
+            }
+            else
+            {
+                existingCustomer.UpdatedBy = "System";
+            }
+
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            var result = new CustomerResponseDTO
+            {
+                Id = existingCustomer.Id,
+                UserId = existingCustomer.UserId,
+                FirstName = existingCustomer.FirstName,
+                LastName = existingCustomer.LastName,
+                Email = existingCustomer.Email,
+                PhoneNumber = existingCustomer.PhoneNumber,
+                CreatedBy = existingCustomer.CreatedBy,
+                CreatedAt = existingCustomer.CreatedAt,
+                UpdatedAt = existingCustomer.UpdatedAt,
+                UpdatedBy = existingCustomer.UpdatedBy
+            };
+
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]

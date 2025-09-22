@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -38,7 +38,7 @@ namespace CWSERVER.Models.Industries.Restaurant.Entities
         public bool IsGlutenFree { get; set; } = false;
         public string? SupplierName { get; set; }
         public string? SupplierCode { get; set; }
-        public string? Status { get; set; }
+        public int Status { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
     }

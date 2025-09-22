@@ -1,5 +1,6 @@
-﻿using CWSERVER.Models.Industries.Restaurant.DTOs.Products;
+using CWSERVER.Models.Industries.Restaurant.DTOs.Products;
 using CWSERVER.Models.Industries.Restaurant.Entities;
+using CWSERVER.Models.Core.DTOs;
 
 namespace CWSERVER.Interfaces.Industry.Restaurant
 {
@@ -10,5 +11,6 @@ namespace CWSERVER.Interfaces.Industry.Restaurant
         Task<Products?> CreateProductsAsync(Products products);
         Task<Products?> UpdateProductsAsync(int id, UpdateProductsDTO updateProductsDTO);
         Task<Products?> DeleteProductsAsync(int id);
+        Task<Products?> RestockProductAsync(int id, ProductRestockDTO restockDto);
     }
 }

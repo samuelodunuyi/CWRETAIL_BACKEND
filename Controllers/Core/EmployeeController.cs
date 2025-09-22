@@ -1,4 +1,4 @@
-﻿using CWSERVER.Data;
+using CWSERVER.Data;
 using CWSERVER.Models.Core.Entities;
 using CWSERVER.Models.Core.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace CWSERVER.Controllers.Core
 {
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
     [ApiController]
     [Authorize(Roles = "Admin,StoreRep")]
     public class EmployeeController(ApiDbContext context, UserManager<User> userManager) : ControllerBase
@@ -44,25 +44,18 @@ namespace CWSERVER.Controllers.Core
 
             var employees = await query.ToListAsync();
 
-            var result = employees.Select(e => new EmployeeDto
+            var result = employees.Select(e => new EmployeeResponseDTO
             {
                 Id = e.Id,
                 UserId = e.UserId,
-                Role = e.User?.Role,
-                IsActive = e.User?.IsActive ?? false,
-                CreatedAt = e.User?.CreatedAt ?? DateTime.MinValue,
-                LastUpdatedAt = e.User?.LastUpdatedAt ?? DateTime.MinValue,
-                LastUpdatedBy = e.User?.LastUpdatedBy,
-                Email = e.User?.Email,
+                StoreId = e.StoreId,
+                StoreName = e.Store?.StoreName,
                 PhoneNumber = e.PhoneNumber,
                 FirstName = e.FirstName,
                 LastName = e.LastName,
-                Store = e.Store != null ? new StoreDto
-                {
-                    StoreId = e.Store.StoreId,
-                    StoreName = e.Store.StoreName,
-                    StoreRep = e.Store.StoreRep
-                } : null
+                CreatedAt = e.CreatedAt,
+                UpdatedAt = e.UpdatedAt,
+                UpdatedBy = e.UpdatedBy
             });
 
             return Ok(result);
@@ -87,25 +80,18 @@ namespace CWSERVER.Controllers.Core
             }
 
           
-            var result = new EmployeeDto
+            var result = new EmployeeResponseDTO
             {
                 Id = employee.Id,
                 UserId = employee.UserId,
-                Role = employee.User?.Role,
-                IsActive = employee.User!.IsActive,
-                CreatedAt = employee.User.CreatedAt,
-                LastUpdatedAt = employee.User.LastUpdatedAt,
-                LastUpdatedBy = employee.User.LastUpdatedBy,
-                Email = employee.User.Email,
+                StoreId = employee.StoreId,
+                StoreName = employee.Store?.StoreName,
                 PhoneNumber = employee.PhoneNumber,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
-                Store = new StoreDto
-                {
-                    StoreId = employee.Store!.StoreId,
-                    StoreName = employee.Store.StoreName,
-                    StoreRep = employee.Store.StoreRep
-                }
+                CreatedAt = employee.CreatedAt,
+                UpdatedAt = employee.UpdatedAt,
+                UpdatedBy = employee.UpdatedBy
             };
 
             return Ok(result);
@@ -113,42 +99,115 @@ namespace CWSERVER.Controllers.Core
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateEmployee([FromBody] Employee employee)
+        public async Task<IActionResult> CreateEmployee([FromBody] EmployeeCreateDTO employeeDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-        
-            var user = await _userManager.FindByIdAsync(employee.UserId!);
-            if (user == null) return BadRequest("User not found");
+            // Validate foreign key references
+            var user = await _userManager.FindByIdAsync(employeeDto.UserId!);
+            if (user == null) return BadRequest($"User with ID {employeeDto.UserId} does not exist.");
+
+            var storeExists = await _context.Stores.AnyAsync(s => s.StoreId == employeeDto.StoreId);
+            if (!storeExists)
+                return BadRequest($"Store with ID {employeeDto.StoreId} does not exist.");
+
+            var employee = new Employee
+            {
+                UserId = employeeDto.UserId,
+                StoreId = employeeDto.StoreId,
+                PhoneNumber = employeeDto.PhoneNumber,
+                FirstName = employeeDto.FirstName,
+                LastName = employeeDto.LastName,
+                CreatedAt = DateTime.UtcNow
+            };
 
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetEmployeeById), new { id = employee.Id }, employee);
+            // Load the store for response
+            await _context.Entry(employee).Reference(e => e.Store).LoadAsync();
+
+            var result = new EmployeeResponseDTO
+            {
+                Id = employee.Id,
+                UserId = employee.UserId,
+                StoreId = employee.StoreId,
+                StoreName = employee.Store?.StoreName,
+                PhoneNumber = employee.PhoneNumber,
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                CreatedAt = employee.CreatedAt,
+                UpdatedAt = employee.UpdatedAt,
+                UpdatedBy = employee.UpdatedBy
+            };
+
+            return CreatedAtAction(nameof(GetEmployeeById), new { id = employee.Id }, result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateEmployee(int id, [FromBody] Employee updatedEmployee)
+        [Authorize(Roles = "Admin,Manager")]
+        public async Task<IActionResult> UpdateEmployee(int id, [FromBody] EmployeeUpdateDTO employeeDto)
         {
-            if (id != updatedEmployee.Id)
-                return BadRequest("ID mismatch");
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var existingEmployee = await _context.Employees.FindAsync(id);
-            if (existingEmployee == null) return NotFound();
+            var currentEmployee = await GetCurrentEmployee();
+            if (currentEmployee == null)
+                return Unauthorized("Employee not found");
 
-         
-            if (User.IsInRole("StoreRep"))
+            var employee = await _context.Employees.Include(e => e.Store).FirstOrDefaultAsync(e => e.Id == id);
+            if (employee == null)
+                return NotFound();
+
+            // Managers can only update employees in their own store
+            if (currentEmployee.User!.Role == "Manager" && employee.StoreId != currentEmployee.StoreId)
+                return Forbid("You can only update employees in your own store");
+
+            // Validate foreign key references if they are being updated
+            if (!string.IsNullOrEmpty(employeeDto.UserId))
             {
-                var currentEmployee = await GetCurrentEmployee();
-                if (currentEmployee == null || existingEmployee.StoreId != currentEmployee.StoreId)
-                    return Forbid();
+                var user = await _userManager.FindByIdAsync(employeeDto.UserId);
+                if (user == null) return BadRequest($"User with ID {employeeDto.UserId} does not exist.");
+                employee.UserId = employeeDto.UserId;
             }
 
-            _context.Entry(existingEmployee).CurrentValues.SetValues(updatedEmployee);
+            if (employeeDto.StoreId.HasValue)
+            {
+                var storeExists = await _context.Stores.AnyAsync(s => s.StoreId == employeeDto.StoreId.Value);
+                if (!storeExists)
+                    return BadRequest($"Store with ID {employeeDto.StoreId} does not exist.");
+                employee.StoreId = employeeDto.StoreId.Value;
+            }
+
+            // Update other fields
+            if (!string.IsNullOrEmpty(employeeDto.PhoneNumber))
+                employee.PhoneNumber = employeeDto.PhoneNumber;
+            if (!string.IsNullOrEmpty(employeeDto.FirstName))
+                employee.FirstName = employeeDto.FirstName;
+            if (!string.IsNullOrEmpty(employeeDto.LastName))
+                employee.LastName = employeeDto.LastName;
+
+            employee.UpdatedAt = DateTime.UtcNow;
+            employee.UpdatedBy = "System"; // TODO: Get from authenticated user
+
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            var result = new EmployeeResponseDTO
+            {
+                Id = employee.Id,
+                UserId = employee.UserId,
+                StoreId = employee.StoreId,
+                StoreName = employee.Store?.StoreName,
+                PhoneNumber = employee.PhoneNumber,
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                CreatedAt = employee.CreatedAt,
+                UpdatedAt = employee.UpdatedAt,
+                UpdatedBy = employee.UpdatedBy
+            };
+
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]

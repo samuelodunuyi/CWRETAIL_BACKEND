@@ -1,4 +1,4 @@
-﻿using CWSERVER.Data;
+using CWSERVER.Data;
 using CWSERVER.Models.Core.DTOs;
 using CWSERVER.Models.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace CWSERVER.Controllers.Core
 {
-    [Route("api/[controller]")]
+    [Route("api/core/[controller]")]
     [ApiController]
     public class UserController(UserManager<User> userManager, ApiDbContext context) : ControllerBase
     {
@@ -194,15 +194,18 @@ namespace CWSERVER.Controllers.Core
                 response.LastName = customer.LastName;
                 response.PhoneNumber = customer.PhoneNumber;
 
-                response.CustomerData = new CustomerDto
+                response.CustomerData = new CustomerResponseDTO
                 {
                     Id = customer.Id,
+                    UserId = customer.UserId,
                     FirstName = customer.FirstName,
                     LastName = customer.LastName,
                     Email = customer.Email,
                     PhoneNumber = customer.PhoneNumber,
                     CreatedBy = customer.CreatedBy,
-                    CreatedAt = customer.CreatedAt
+                    CreatedAt = customer.CreatedAt,
+                    UpdatedAt = customer.UpdatedAt,
+                    UpdatedBy = customer.UpdatedBy
                 };
             }
 

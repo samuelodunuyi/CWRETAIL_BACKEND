@@ -1,4 +1,4 @@
-﻿using CWSERVER.Interfaces.Industry.Restaurant;
+using CWSERVER.Interfaces.Industry.Restaurant;
 using CWSERVER.Models.Industries.Restaurant.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +6,7 @@ using System.Security;
 
 namespace CWSERVER.Controllers.Industries.Restaurants
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/restaurant/[controller]")]
     [ApiController]
     public class PermissionsController(IPermissions permissionsRepo) : ControllerBase
     {

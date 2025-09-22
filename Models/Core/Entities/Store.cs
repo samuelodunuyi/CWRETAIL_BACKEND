@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace CWSERVER.Models.Core.Entities
 {
@@ -9,5 +9,10 @@ namespace CWSERVER.Models.Core.Entities
         public string? StoreName { get; set; }
 
         public string? StoreRep { get; set; }
+        
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
+        public string? CreatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
     }
 }

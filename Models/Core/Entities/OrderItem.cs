@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace CWSERVER.Models.Core.Entities
@@ -14,7 +14,9 @@ namespace CWSERVER.Models.Core.Entities
         [JsonIgnore]
         public virtual Order? Order { get; set; }
 
+        [ForeignKey("Product")]
         public int ProductId { get; set; }
+        public virtual Product? Product { get; set; }
 
         public string? ProductName { get; set; }
         public string? ProductDescription { get; set; }
@@ -25,6 +27,11 @@ namespace CWSERVER.Models.Core.Entities
         public decimal? OriginalPriceAtOrder { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public int Quantity { get; set; }
-        public string? ProductImageUrl { get; set; } 
+        public string? ProductImageUrl { get; set; }
+        
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
+        public string? CreatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using CWSERVER.Data;
+using CWSERVER.Data;
 using CWSERVER.Interfaces.Industry.Restaurant;
 using CWSERVER.Respository.Industry.Restaurant;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CWSERVER.Controllers.Industries.Restaurants
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/restaurant/[controller]")]
     [ApiController]
     public class AuditLogsController(IAuditLogs auditLogsRepo) : ControllerBase
     {

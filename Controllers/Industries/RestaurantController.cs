@@ -53,7 +53,7 @@ namespace CW_RETAIL.Controllers.Industries
                 SpiceLevel = p.SpiceLevel,
                 DietTypes = p.DietTypes,
                 Store = isAdmin 
-                    ? new StoreFullInfoDTO 
+                    ? new CW_RETAIL.Models.Industries.StoreFullInfoDTO 
                     {
                         StoreId = p.Store.StoreId,
                         StoreName = p.Store.StoreName,
@@ -64,7 +64,7 @@ namespace CW_RETAIL.Controllers.Industries
                         StoreType = p.Store.StoreType,
                         IsActive = p.Store.IsActive
                     }
-                    : new StoreBasicInfoDTO
+                    : new CW_RETAIL.Models.Industries.StoreBasicInfoDTO
                     {
                         StoreId = p.Store.StoreId,
                         StoreName = p.Store.StoreName,
@@ -113,7 +113,7 @@ namespace CW_RETAIL.Controllers.Industries
                 SpiceLevel = restaurantProduct.SpiceLevel,
                 DietTypes = restaurantProduct.DietTypes,
                 Store = isAdmin 
-                    ? new StoreFullInfoDTO 
+                    ? new CW_RETAIL.Models.Industries.StoreFullInfoDTO 
                     {
                         StoreId = restaurantProduct.Store.StoreId,
                         StoreName = restaurantProduct.Store.StoreName,
@@ -124,7 +124,7 @@ namespace CW_RETAIL.Controllers.Industries
                         StoreType = restaurantProduct.Store.StoreType,
                         IsActive = restaurantProduct.Store.IsActive
                     }
-                    : new StoreBasicInfoDTO
+                    : new CW_RETAIL.Models.Industries.StoreBasicInfoDTO
                     {
                         StoreId = restaurantProduct.Store.StoreId,
                         StoreName = restaurantProduct.Store.StoreName,

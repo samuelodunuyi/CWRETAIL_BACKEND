@@ -81,7 +81,7 @@ namespace CW_RETAIL.Controllers.Core
         public async Task<IActionResult> Register([FromBody] RegisterRequest model)
         {
             // Set role to Customer
-            model.RoleId = UserRole.Customer;
+            model.RoleId = 3; // Customer role ID
 
             var result = await _authService.RegisterAsync(
                 model.Username, 

@@ -32,9 +32,9 @@ namespace CW_RETAIL.Controllers.Core
             bool showInactive = isActive.HasValue && isActive.Value == false;
 
             // Only allow SuperAdmin and StoreAdmin to see inactive products
-            if (showInactive && 
+            if (showInactive && (
                 currentUserRole != "SuperAdmin" &&
-                currentUserRole != "StoreAdmin")
+                currentUserRole != "StoreAdmin"))
             {
                 return Forbid();
             }
@@ -88,7 +88,7 @@ namespace CW_RETAIL.Controllers.Core
             bool isAdmin = currentUserRole == "SuperAdmin" ||
                          currentUserRole == "StoreAdmin";
             
-            var productDtos = await query
+            var products = await query
                 .Include(p => p.Category)
                 .Include(p => p.Store)
                 .Include(p => p.AdditionalImages)
@@ -136,12 +136,12 @@ namespace CW_RETAIL.Controllers.Core
                     CreatedByUser = isAdmin && p.CreatedBy != null
                         ? new UserBasicInfoDTO 
                         {
-                            Id = _context.Users.FirstOrDefault(u => u.Email == p.CreatedBy)?.Id ?? 0,
-                            Username = _context.Users.FirstOrDefault(u => u.Email == p.CreatedBy)?.Username ?? string.Empty,
+                            Id = _context.Users.Where(u => u.Email == p.CreatedBy).Select(u => u.Id).FirstOrDefault(),
+                            Username = _context.Users.Where(u => u.Email == p.CreatedBy).Select(u => u.Username).FirstOrDefault() ?? string.Empty,
                             Email = p.CreatedBy,
-                            FirstName = _context.Users.FirstOrDefault(u => u.Email == p.CreatedBy)?.FirstName ?? string.Empty,
-                            LastName = _context.Users.FirstOrDefault(u => u.Email == p.CreatedBy)?.LastName ?? string.Empty,
-                            RoleName = _context.Users.FirstOrDefault(u => u.Email == p.CreatedBy)?.Role.Name ?? string.Empty
+                            FirstName = _context.Users.Where(u => u.Email == p.CreatedBy).Select(u => u.FirstName).FirstOrDefault() ?? string.Empty,
+                            LastName = _context.Users.Where(u => u.Email == p.CreatedBy).Select(u => u.LastName).FirstOrDefault() ?? string.Empty,
+                            RoleName = _context.Users.Where(u => u.Email == p.CreatedBy).Select(u => u.Role.Name).FirstOrDefault() ?? string.Empty
                         }
                         : null
                 })
@@ -156,8 +156,8 @@ namespace CW_RETAIL.Controllers.Core
         {
             var currentUserRole = User.FindFirstValue(ClaimTypes.Role);
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
-            bool isAdmin = currentUserRole == UserRole.SuperAdmin.ToString() || 
-                           currentUserRole == UserRole.StoreAdmin.ToString();
+            bool isAdmin = currentUserRole == "SuperAdmin" ||
+                currentUserRole == "StoreAdmin";
             
             var product = await _context.Products
                 .Include(p => p.Category)
@@ -179,11 +179,11 @@ namespace CW_RETAIL.Controllers.Core
             }
 
             // Check permissions
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // SuperAdmin can access any product
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString())
+            else if (currentUserRole == "StoreAdmin")
             {
                 // StoreAdmin can only access products for their store
                 var store = await _context.Stores
@@ -194,7 +194,7 @@ namespace CW_RETAIL.Controllers.Core
                     return Forbid();
                 }
             }
-            else if (currentUserRole == UserRole.Employee.ToString())
+            else if (currentUserRole == "Employee")
             {
                 // Employee can only access products for their assigned store
                 var employee = await _context.Employees
@@ -298,7 +298,7 @@ namespace CW_RETAIL.Controllers.Core
             {
                 // SuperAdmin can create any product
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString())
+            else if (currentUserRole == "StoreAdmin")
             {
                 // StoreAdmin can only create products for their store
                 var store = await _context.Stores
@@ -366,11 +366,11 @@ namespace CW_RETAIL.Controllers.Core
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
             // Check permissions
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // SuperAdmin can update any product
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString())
+            else if (currentUserRole == "StoreAdmin")
             {
                 // StoreAdmin can only update products for their store
                 var store = await _context.Stores
@@ -412,7 +412,7 @@ namespace CW_RETAIL.Controllers.Core
             existingProduct.UpdatedBy = currentUserEmail;
 
             // Only SuperAdmin can change store assignment
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 existingProduct.StoreId = product.StoreId;
             }
@@ -454,11 +454,11 @@ namespace CW_RETAIL.Controllers.Core
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
             // Check permissions
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // SuperAdmin can delete any product
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString())
+            else if (currentUserRole == "StoreAdmin")
             {
                 // StoreAdmin can only delete products for their store
                 var store = await _context.Stores
@@ -498,11 +498,11 @@ namespace CW_RETAIL.Controllers.Core
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
             // Check permissions
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // SuperAdmin can update any product
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString())
+            else if (currentUserRole == "StoreAdmin")
             {
                 // StoreAdmin can only update products for their store
                 var store = await _context.Stores
@@ -672,7 +672,7 @@ namespace CW_RETAIL.Controllers.Core
                     return Forbid();
                 }
             }
-            else if (currentUserRole == UserRole.Employee.ToString())
+            else if (currentUserRole == "Employee")
             {
                 // Employee can only restock products for their assigned store
                 var employee = await _context.Employees

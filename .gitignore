@@ -1,0 +1,87 @@
+*.ps1
+update_product_images.sql
+product_with_image.json
+product_with_additional_images.json
+add_images.sql 
+wwwroot
+add_additional_images.sql
+.vs
+# ============================
+# Build and runtime artifacts
+# ============================
+bin/
+obj/
+out/
+publish/
+TestResults/
+*.exe
+*.dll
+*.pdb
+*.cache
+*.log
+*.tmp
+*.bak
+test_images
+
+# ============================
+# User-specific files
+# ============================
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ============================
+# Visual Studio / VS Code
+# ============================
+.vscode/
+.vs/
+.idea/
+*.dbmdl
+*.jfm
+*.VC.db
+*.VC.VC.opendb
+
+# ============================
+# ASP.NET Core
+# ============================
+wwwroot/lib/
+wwwroot/dist/
+wwwroot/node_modules/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================
+# Configuration & secrets
+# ============================
+secrets.json
+.env
+.env.*
+
+# ============================
+# Docker & scripts
+# ============================
+*.Dockerfile
+docker-compose.*
+*.ps1
+*.sh
+# ============================
+# Misc
+# ============================
+*.DS_Store
+Thumbs.db
+*.orig
+*.swp
+*.swo
+*.tmp
+*.log
+
+# ============================
+# Entity Framework / Migrations (optional)
+# ============================
+# Uncomment this if you regenerate migrations often locally and don’t want them in version control
+# Migrations/
+

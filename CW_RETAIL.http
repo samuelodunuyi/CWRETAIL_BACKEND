@@ -1,0 +1,6 @@
+@CW_RETAIL_HostAddress = http://localhost:5117
+
+GET {{CW_RETAIL_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

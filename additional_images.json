@@ -1,0 +1,14 @@
+﻿[
+    {
+        "ProductId":  1,
+        "ImagePath":  "/test_images/pexels-pixabay-461198.jpg"
+    },
+    {
+        "ProductId":  1,
+        "ImagePath":  "/test_images/pexels-pixabay-533325.jpg"
+    },
+    {
+        "ProductId":  1,
+        "ImagePath":  "/test_images/pexels-sydney-troxell-718742.jpg"
+    }
+]

@@ -21,11 +21,21 @@ namespace CW_RETAIL.Services
 
         public string GenerateAccessToken(User user)
         {
+            // Convert RoleId to role name
+            string roleName = user.RoleId switch
+            {
+                0 => "SuperAdmin",
+                1 => "StoreAdmin",
+                2 => "Employee",
+                3 => "Customer",
+                _ => user.RoleId.ToString()
+            };
+            
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.RoleId.ToString()),
+                new Claim(ClaimTypes.Role, roleName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("userId", user.Id.ToString())
             };

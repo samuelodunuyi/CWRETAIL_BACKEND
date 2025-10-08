@@ -12,6 +12,7 @@ namespace CW_RETAIL.Controllers.Core
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "SuperAdmin,StoreAdmin")]
     public class ProductController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -35,8 +36,8 @@ namespace CW_RETAIL.Controllers.Core
             if (showInactive && (
                 currentUserRole != "SuperAdmin" &&
                 currentUserRole != "StoreAdmin"))
-            {
-                return Forbid();
+            {   
+                return StatusCode(403, new { message = $"Access denied. User role: {User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "No role found"}" });
             }
 
             IQueryable<Product> query = _context.Products;
@@ -60,7 +61,7 @@ namespace CW_RETAIL.Controllers.Core
 
                 if (store == null)
                 {
-                    return Forbid();
+                    return StatusCode(403, new { message = $"Access denied. User role: {User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "No role found"}" });
                 }
 
                 query = query.Where(p => p.StoreId == store.StoreId);
@@ -175,7 +176,7 @@ namespace CW_RETAIL.Controllers.Core
                 currentUserRole != UserRole.SuperAdmin.ToString() && 
                 currentUserRole != UserRole.StoreAdmin.ToString())
             {
-                return Forbid();
+                return StatusCode(403, new { message = $"Access denied. User role: {User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "No role found"}" });
             }
 
             // Check permissions
@@ -191,7 +192,7 @@ namespace CW_RETAIL.Controllers.Core
 
                 if (store == null || product.StoreId != store.StoreId)
                 {
-                    return Forbid();
+                    return StatusCode(403, new { message = $"Access denied. User role: {User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "No role found"}" });
                 }
             }
             else if (currentUserRole == "Employee")
@@ -202,7 +203,7 @@ namespace CW_RETAIL.Controllers.Core
 
                 if (employee == null || product.StoreId != employee.StoreId)
                 {
-                    return Forbid();
+                    return StatusCode(403, new { message = $"Access denied. User role: {User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "No role found"}" });
                 }
             }
             else
@@ -210,7 +211,7 @@ namespace CW_RETAIL.Controllers.Core
                 // Customers can only see active products
                 if (!product.IsActive || !product.ShowInWeb)
                 {
-                    return Forbid();
+                    return StatusCode(403, new { message = $"Access denied. User role: {User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "No role found"}" });
                 }
             }
 
@@ -271,6 +272,14 @@ namespace CW_RETAIL.Controllers.Core
             return Ok(productDto);
         }
 
+        // GET: api/Product/test
+        [HttpGet("test")]
+        [AllowAnonymous]
+        public IActionResult TestEndpoint()
+        {
+            return Ok(new { Message = "Test endpoint works!" });
+        }
+
         // POST: api/Product
         [HttpPost]
         [Authorize]
@@ -306,7 +315,7 @@ namespace CW_RETAIL.Controllers.Core
 
                 if (store == null)
                 {
-                    return Forbid();
+                    return StatusCode(403, new { message = $"Access denied. User role: {User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "No role found"}" });
                 }
 
                 // Ensure the product is assigned to the StoreAdmin's store
@@ -317,7 +326,7 @@ namespace CW_RETAIL.Controllers.Core
             }
             else
             {
-                return Forbid();
+                return StatusCode(403, new { message = $"Access denied. User role: {User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "No role found"}" });
             }
 
             product.CreatedAt = DateTime.UtcNow;

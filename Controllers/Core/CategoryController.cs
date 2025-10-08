@@ -12,7 +12,7 @@ namespace CW_RETAIL.Controllers.Core
 {
     [Route("api/[controller]")]
     [ApiController]
-    // Removed [Authorize] to make Category API open
+    [Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

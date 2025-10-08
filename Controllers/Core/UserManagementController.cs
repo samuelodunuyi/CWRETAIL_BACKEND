@@ -10,6 +10,15 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+namespace CW_RETAIL.Models.Core
+{
+    public class StoreAdminAssignmentRequest
+    {
+        public string StoreId { get; set; }
+        public string UserEmail { get; set; }
+    }
+}
+
 namespace CW_RETAIL.Controllers.Core
 {
     [Route("api/[controller]")]
@@ -119,7 +128,7 @@ namespace CW_RETAIL.Controllers.Core
         }
 
         [HttpPost("assign-storeadmin")]
-        public async Task<IActionResult> AssignStoreAdmin(int storeId, string userEmail)
+        public async Task<IActionResult> AssignStoreAdmin([FromBody] StoreAdminAssignmentRequest request)
         {
             // Check if user is SuperAdmin
             if (!User.IsInRole(UserRole.SuperAdmin.ToString()))
@@ -127,7 +136,7 @@ namespace CW_RETAIL.Controllers.Core
                 return Forbid();
             }
 
-            var store = await _context.Stores.FindAsync(storeId);
+            var store = await _context.Stores.FindAsync(int.Parse(request.StoreId));
             if (store == null)
             {
                 return NotFound(new { Message = "Store not found" });
@@ -135,7 +144,7 @@ namespace CW_RETAIL.Controllers.Core
 
             var user = await _context.Users
                 .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.Email == userEmail);
+                .FirstOrDefaultAsync(u => u.Email == request.UserEmail);
 
             if (user == null)
             {
@@ -147,14 +156,14 @@ namespace CW_RETAIL.Controllers.Core
                 return BadRequest(new { Message = "User is not a Store Admin" });
             }
 
-            store.StoreAdmin = userEmail;
+            store.StoreAdmin = request.UserEmail;
             store.UserId = user.Id;
             store.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
             // Log the action
-            await LogAuditAsync("Assign StoreAdmin", $"Assigned StoreAdmin {userEmail} to Store {store.StoreName}");
+            await LogAuditAsync("Assign StoreAdmin", $"Assigned StoreAdmin {request.UserEmail} to Store {store.StoreName}");
 
             return Ok(new { Message = "Store Admin assigned successfully" });
         }

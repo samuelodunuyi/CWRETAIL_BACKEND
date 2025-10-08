@@ -136,8 +136,8 @@ using (var scope = app.Services.CreateScope())
     {
         // Create default superadmin
         await authService.RegisterAsync(
-            "superadmin2", 
-            "superadmin2@codeware.com", 
+            "superadmin", 
+            "superadmin@codeware.com", 
             "Admin@123", 
             UserRole.SuperAdmin);
     }

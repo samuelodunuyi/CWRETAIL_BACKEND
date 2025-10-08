@@ -4,8 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace CW_RETAIL.Controllers.Core
@@ -106,7 +109,7 @@ namespace CW_RETAIL.Controllers.Core
                     BasePrice = p.BasePrice,
                     CurrentStock = p.CurrentStock,
                     UnitOfMeasure = p.UnitOfMeasure,
-                    ImageUrl = p.ImageUrl,
+                    ImageUrl = p.ImageUrl, // Keep this for backward compatibility
                     AdditionalImages = p.AdditionalImages.ToList(),
                     ShowInWeb = p.ShowInWeb,
                     ShowInPOS = p.ShowInPOS,
@@ -445,7 +448,14 @@ namespace CW_RETAIL.Controllers.Core
                 }
             }
 
-            return NoContent();
+            // Return the updated product
+            var updatedProduct = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Store)
+                .Include(p => p.AdditionalImages)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+
+            return Ok(updatedProduct);
         }
 
         // DELETE: api/Product/5
@@ -604,7 +614,7 @@ namespace CW_RETAIL.Controllers.Core
                         product.UnitOfMeasure = item.Value.ToString();
                         break;
                     case "imageurl":
-                        product.ImageUrl = item.Value.ToString();
+                    product.ImageUrl = item.Value.ToString();
                         break;
                     case "showinweb":
                         if (bool.TryParse(item.Value.ToString(), out bool showInWeb))
@@ -617,6 +627,29 @@ namespace CW_RETAIL.Controllers.Core
                     case "isactive":
                         if (bool.TryParse(item.Value.ToString(), out bool isActive))
                             product.IsActive = isActive;
+                        break;
+                    case "additionalimages":
+                        // Handle additional images
+                        if (item.Value is JsonElement jsonElement && jsonElement.ValueKind == JsonValueKind.Array)
+                        {
+                            // Clear existing additional images
+                            var existingImages = await _context.ProductImages
+                                .Where(pi => pi.ProductId == product.ProductId)
+                                .ToListAsync();
+                            
+                            _context.ProductImages.RemoveRange(existingImages);
+                            
+                            // Add new images
+                            foreach (var imageElement in jsonElement.EnumerateArray())
+                            {
+                                var productImage = new ProductImage
+                                  {
+                                      ProductId = product.ProductId,
+                                      ImagePath = imageElement.GetString()
+                                  };
+                                _context.ProductImages.Add(productImage);
+                            }
+                        }
                         break;
                 }
             }
@@ -643,7 +676,14 @@ namespace CW_RETAIL.Controllers.Core
                 }
             }
 
-            return NoContent();
+            // Return the updated product
+            var updatedProduct = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Store)
+                .Include(p => p.AdditionalImages)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+
+            return Ok(updatedProduct);
         }
 
         // POST: api/Product/Restock

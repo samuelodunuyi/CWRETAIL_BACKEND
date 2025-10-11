@@ -24,40 +24,85 @@ namespace CW_RETAIL.Controllers.Core
 
         // GET: api/Category
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCategories([FromQuery] int? storeId = null, [FromQuery] bool? isActive = null)
         {
             var query = _context.Categories.AsQueryable();
+
+            // Determine authentication status
+            var isAuthenticated = User?.Identity?.IsAuthenticated == true;
 
             // Apply filters
             if (storeId.HasValue)
             {
                 query = query.Where(c => c.StoreId == storeId);
             }
-
-            if (isActive.HasValue)
+            
+            if (isAuthenticated)
             {
-                query = query.Where(c => c.IsActive == isActive.Value);
+                // Authenticated users can control the isActive filter explicitly
+                if (isActive.HasValue)
+                {
+                    query = query.Where(c => c.IsActive == isActive.Value);
+                }
+            }
+            else
+            {
+                // Anonymous users should only see active categories
+                query = query.Where(c => c.IsActive);
             }
 
             // Order by DisplayOrder
             query = query.OrderBy(c => c.DisplayOrder);
 
-            var categories = await query.ToListAsync();
+            var categories = await query
+                .Select(c => new CategoryPublicDTO
+                {
+                    CategoryId = c.CategoryId,
+                    CategoryName = c.CategoryName,
+                    Description = c.Description,
+                    CategoryIcon = c.CategoryIcon,
+                    StoreId = c.StoreId,
+                    DisplayOrder = c.DisplayOrder,
+                    IsActive = c.IsActive
+                })
+                .ToListAsync();
             return Ok(categories);
         }
 
         // GET: api/Category/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCategory(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var isAuthenticated = User?.Identity?.IsAuthenticated == true;
+
+            var query = _context.Categories.Where(c => c.CategoryId == id);
+            if (!isAuthenticated)
+            {
+                // Anonymous users should only see active categories
+                query = query.Where(c => c.IsActive);
+            }
+
+            var category = await query.FirstOrDefaultAsync();
 
             if (category == null)
             {
                 return NotFound();
             }
 
-            return Ok(category);
+            var dto = new CategoryPublicDTO
+            {
+                CategoryId = category.CategoryId,
+                CategoryName = category.CategoryName,
+                Description = category.Description,
+                CategoryIcon = category.CategoryIcon,
+                StoreId = category.StoreId,
+                DisplayOrder = category.DisplayOrder,
+                IsActive = category.IsActive
+            };
+
+            return Ok(dto);
         }
 
         // POST: api/Category

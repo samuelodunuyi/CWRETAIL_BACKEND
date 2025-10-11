@@ -27,6 +27,7 @@ namespace CW_RETAIL.Controllers.Core
 
         // GET: api/Product
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetProducts([FromQuery] bool? isActive)
         {
             var currentUserRole = User.FindFirstValue(ClaimTypes.Role);
@@ -156,6 +157,7 @@ namespace CW_RETAIL.Controllers.Core
 
         // GET: api/Product/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetProduct(int id)
         {
             var currentUserRole = User.FindFirstValue(ClaimTypes.Role);

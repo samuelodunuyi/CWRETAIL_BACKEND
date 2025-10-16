@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>59719a75-2fe8-48eb-ab3d-a56802649775</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\Industries\Retail Store\" />
+    <Folder Include="Controllers\Industries\Pharmacy\" />
+    <Folder Include="Interfaces\Core\" />
+    <Folder Include="Interfaces\Industry\Retail Store\" />
+    <Folder Include="Interfaces\Industry\Pharmacy\" />
+    <Folder Include="Models\Industries\Retail Store\" />
+    <Folder Include="Models\Industries\Pharmacy\" />
+    <Folder Include="Respository\Core\" />
+    <Folder Include="Respository\Industry\Retail Store\" />
+    <Folder Include="Respository\Industry\Pharmacy\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+</Project>

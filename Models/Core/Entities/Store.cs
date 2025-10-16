@@ -1,0 +1,18 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace CWSERVER.Models.Core.Entities
+{
+    public class Store
+    {
+        public int StoreId { get; set; }
+        [Required]
+        public string? StoreName { get; set; }
+
+        public string? StoreRep { get; set; }
+        
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
+        public string? CreatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
+    }
+}

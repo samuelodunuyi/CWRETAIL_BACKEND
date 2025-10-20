@@ -28,7 +28,7 @@ namespace CW_RETAIL.Controllers.Industries
             int userRoleValue = int.Parse(userRole);
 
             // Filter orders based on user role
-            if (userRoleValue == UserRole.SuperAdmin)
+            if (userRoleValue == 1) // SuperAdmin
             {
                 // SuperAdmin can see all orders
                 return await _context.Order
@@ -36,7 +36,7 @@ namespace CW_RETAIL.Controllers.Industries
                     .Include(o => o.Store)
                     .ToListAsync();
             }
-            else if (userRoleValue == UserRole.StoreAdmin)
+            else if (userRoleValue == 2) // StoreAdmin
             {
                 // Get the stores this admin manages
                 int userId;
@@ -86,9 +86,9 @@ namespace CW_RETAIL.Controllers.Industries
             int userRoleValue = int.Parse(userRole);
 
             // Check if user has permission to view this order
-            if (userRoleValue != UserRole.SuperAdmin)
+            if (userRoleValue != 1) // SuperAdmin
             {
-                if (userRoleValue == UserRole.StoreAdmin)
+                if (userRoleValue == 2) // StoreAdmin
                 {
                     // Check if store admin manages this store
                     int userId;
@@ -212,9 +212,9 @@ namespace CW_RETAIL.Controllers.Industries
             int userRoleValue = int.Parse(userRole);
 
             // Check if user has permission to update this order
-            if (userRoleValue != UserRole.SuperAdmin)
+            if (userRoleValue != 1) // SuperAdmin
             {
-                if (userRoleValue == UserRole.StoreAdmin)
+                if (userRoleValue == 2) // StoreAdmin
                 {
                     // Check if store admin manages this store
                     int userId;

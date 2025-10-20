@@ -64,7 +64,7 @@ namespace CW_RETAIL.Controllers.Core
                 int roleValue;
                 int.TryParse(currentUserRole, out roleValue);
 
-                if (roleValue == UserRole.StoreAdmin || currentUserRole == UserRole.StoreAdmin.ToString())
+                if (roleValue == UserRole.StoreAdmin || currentUserRole == "StoreAdmin")
                 {
                     var store = await _context.Stores.FirstOrDefaultAsync(s => s.StoreAdmin == currentUserEmail);
                     if (store == null)
@@ -81,7 +81,7 @@ namespace CW_RETAIL.Controllers.Core
                         return Forbid();
                     }
                 }
-                else if (roleValue == UserRole.Employee || currentUserRole == UserRole.Employee.ToString())
+                else if (roleValue == UserRole.Employee || currentUserRole == "Employee")
                 {
                     var storeIds = await _context.Employees
                         .Where(e => e.User.Email == currentUserEmail)
@@ -98,7 +98,7 @@ namespace CW_RETAIL.Controllers.Core
                         return Forbid();
                     }
                 }
-                else if (roleValue == UserRole.Customer || currentUserRole == UserRole.Customer.ToString())
+                else if (roleValue == UserRole.Customer || currentUserRole == "Customer")
                 {
                     // Customers only see public products
                     query = query.Where(p => p.IsActive && p.ShowInWeb);
@@ -170,7 +170,7 @@ namespace CW_RETAIL.Controllers.Core
                 int roleValue;
                 int.TryParse(currentUserRole, out roleValue);
 
-                if (roleValue == UserRole.StoreAdmin || currentUserRole == UserRole.StoreAdmin.ToString())
+                if (roleValue == UserRole.StoreAdmin || currentUserRole == "StoreAdmin")
                 {
                     var store = await _context.Stores.FirstOrDefaultAsync(s => s.StoreAdmin == currentUserEmail);
                     if (store == null)
@@ -179,7 +179,7 @@ namespace CW_RETAIL.Controllers.Core
                     }
                     query = query.Where(x => x.StoreId == store.StoreId);
                 }
-                else if (roleValue == UserRole.Employee || currentUserRole == UserRole.Employee.ToString())
+                else if (roleValue == UserRole.Employee || currentUserRole == "Employee")
                 {
                     var storeIds = await _context.Employees
                         .Where(e => e.User.Email == currentUserEmail)
@@ -191,7 +191,7 @@ namespace CW_RETAIL.Controllers.Core
                     }
                     query = query.Where(x => storeIds.Contains(x.StoreId));
                 }
-                else if (roleValue == UserRole.Customer || currentUserRole == UserRole.Customer.ToString())
+                else if (roleValue == UserRole.Customer || currentUserRole == "Customer")
                 {
                     query = query.Where(x => x.IsActive && x.ShowInWeb);
                 }

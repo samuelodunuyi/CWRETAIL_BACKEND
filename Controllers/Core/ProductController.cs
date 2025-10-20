@@ -178,8 +178,8 @@ namespace CW_RETAIL.Controllers.Core
 
             // Check if product is inactive and user has permission to view it
             if (!product.IsActive && 
-                currentUserRole != UserRole.SuperAdmin.ToString() && 
-                currentUserRole != UserRole.StoreAdmin.ToString())
+                currentUserRole != "SuperAdmin" && 
+                currentUserRole != "StoreAdmin")
             {
                 return StatusCode(403, new { message = $"Access denied. User role: {User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "No role found"}" });
             }
@@ -551,7 +551,7 @@ namespace CW_RETAIL.Controllers.Core
                 // Handle StoreId specially - only SuperAdmin can change it
                 if (item.Key.Equals("storeId", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (currentUserRole == UserRole.SuperAdmin.ToString())
+                    if (currentUserRole == "SuperAdmin")
                     {
                         if (int.TryParse(item.Value.ToString(), out int storeId))
                         {
@@ -708,11 +708,11 @@ namespace CW_RETAIL.Controllers.Core
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
             // Check permissions
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // SuperAdmin can restock any product
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString())
+            else if (currentUserRole == "StoreAdmin")
             {
                 // StoreAdmin can only restock products for their store
                 var store = await _context.Stores

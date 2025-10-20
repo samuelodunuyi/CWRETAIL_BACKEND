@@ -35,7 +35,7 @@ namespace CW_RETAIL.Controllers.Core
                 var stores = await _context.Stores.ToListAsync();
                 return Ok(stores);
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString())
+            else if (currentUserRole == "StoreAdmin")
             {
                 // StoreAdmin sees only their store
                 var stores = await _context.Stores
@@ -43,7 +43,7 @@ namespace CW_RETAIL.Controllers.Core
                     .ToListAsync();
                 return Ok(stores);
             }
-            else if (currentUserRole == UserRole.Employee.ToString())
+            else if (currentUserRole == "Employee")
             {
                 // Employee sees only their assigned store
                 var employee = await _context.Employees
@@ -76,17 +76,17 @@ namespace CW_RETAIL.Controllers.Core
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
             // Check permissions
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // SuperAdmin can access any store
                 return Ok(store);
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString() && store.StoreAdmin == currentUserEmail)
+            else if (currentUserRole == "StoreAdmin" && store.StoreAdmin == currentUserEmail)
             {
                 // StoreAdmin can only access their store
                 return Ok(store);
             }
-            else if (currentUserRole == UserRole.Employee.ToString())
+            else if (currentUserRole == "Employee")
             {
                 // Employee can only access their assigned store
                 var employee = await _context.Employees
@@ -142,11 +142,11 @@ namespace CW_RETAIL.Controllers.Core
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
             // Check permissions
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // SuperAdmin can update any store
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString() && existingStore.StoreAdmin == currentUserEmail)
+            else if (currentUserRole == "StoreAdmin" && existingStore.StoreAdmin == currentUserEmail)
             {
                 // StoreAdmin can only update their store
                 // But they cannot change the StoreAdmin field
@@ -166,7 +166,7 @@ namespace CW_RETAIL.Controllers.Core
             existingStore.StoreType = store.StoreType;
             
             // Only SuperAdmin can update these fields
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 existingStore.StoreAdmin = store.StoreAdmin;
                 existingStore.UserId = store.UserId;
@@ -210,11 +210,11 @@ namespace CW_RETAIL.Controllers.Core
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
             // Check permissions
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // SuperAdmin can update any store
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString() && store.StoreAdmin == currentUserEmail)
+            else if (currentUserRole == "StoreAdmin" && store.StoreAdmin == currentUserEmail)
             {
                 // StoreAdmin can only update their store
                 // But they cannot change the StoreAdmin field
@@ -239,7 +239,7 @@ namespace CW_RETAIL.Controllers.Core
                 store.StoreType = patchStore.StoreType;
             
             // Only SuperAdmin can update these fields
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 if (patchStore.StoreAdmin != null)
                     store.StoreAdmin = patchStore.StoreAdmin;

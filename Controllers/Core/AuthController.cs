@@ -38,7 +38,10 @@ namespace CW_RETAIL.Controllers.Core
                 RefreshToken = result.refreshToken,
                 Username = result.user.Username,
                 Email = result.user.Email,
-                Role = result.user.RoleId
+                Role = result.user.RoleId,
+                FirstName = result.user.FirstName,
+                LastName = result.user.LastName
+
             });
         }
 
@@ -87,7 +90,9 @@ namespace CW_RETAIL.Controllers.Core
                 model.Username, 
                 model.Email, 
                 model.Password, 
-                model.RoleId);
+                model.RoleId,
+                model.FirstName,
+                model.LastName);
 
             if (!result)
             {

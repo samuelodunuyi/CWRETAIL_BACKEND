@@ -2,9 +2,13 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
+# copy csproj and restore dependencies
+COPY ["CWRETAIL_BACKEND.csproj", "./"]
+RUN dotnet restore "CWRETAIL_BACKEND.csproj"
+
+# copy everything else and build
 COPY . .
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app/out
+RUN dotnet publish "CWRETAIL_BACKEND.csproj" -c Release -o /app/out
 
 # Stage 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime

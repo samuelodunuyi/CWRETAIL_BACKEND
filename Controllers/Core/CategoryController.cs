@@ -126,7 +126,7 @@ namespace CW_RETAIL.Controllers.Core
                     }
                 }
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString())
+            else if (currentUserRole == "StoreAdmin")
             {
                 // StoreAdmin can only create categories for their store
                 var store = await _context.Stores
@@ -181,11 +181,11 @@ namespace CW_RETAIL.Controllers.Core
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
             // Check permissions
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // SuperAdmin can update any category
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString())
+            else if (currentUserRole == "StoreAdmin")
             {
                 // StoreAdmin can only update categories for their store
                 var store = await _context.Stores
@@ -219,7 +219,7 @@ namespace CW_RETAIL.Controllers.Core
             existingCategory.UpdatedAt = DateTime.UtcNow;
 
             // Only SuperAdmin can change store assignment
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // Validate that the store exists if StoreId is provided
                 if (category.StoreId.HasValue)
@@ -269,11 +269,11 @@ namespace CW_RETAIL.Controllers.Core
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
             // Check permissions
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // SuperAdmin can update any category
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString())
+            else if (currentUserRole == "StoreAdmin")
             {
                 // StoreAdmin can only update categories for their store
                 var store = await _context.Stores
@@ -349,11 +349,11 @@ namespace CW_RETAIL.Controllers.Core
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
             // Check permissions
-            if (currentUserRole == UserRole.SuperAdmin.ToString())
+            if (currentUserRole == "SuperAdmin")
             {
                 // SuperAdmin can delete any category
             }
-            else if (currentUserRole == UserRole.StoreAdmin.ToString())
+            else if (currentUserRole == "StoreAdmin")
             {
                 // StoreAdmin can only delete categories for their store
                 var store = await _context.Stores

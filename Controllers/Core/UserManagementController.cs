@@ -40,7 +40,7 @@ namespace CW_RETAIL.Controllers.Core
         public async Task<IActionResult> CreateStoreAdmin([FromBody] RegisterRequest model)
         {
             // Check if user is SuperAdmin
-            if (!User.IsInRole(UserRole.SuperAdmin.ToString()))
+            if (!User.IsInRole("SuperAdmin"))
             {
                 return Forbid();
             }
@@ -52,7 +52,9 @@ namespace CW_RETAIL.Controllers.Core
                 model.Username, 
                 model.Email, 
                 model.Password, 
-                model.RoleId);
+                model.RoleId,
+                model.FirstName,
+                model.LastName);
 
             if (!result)
             {
@@ -70,7 +72,7 @@ namespace CW_RETAIL.Controllers.Core
         public async Task<IActionResult> CreateEmployee([FromBody] RegisterRequest model)
         {
             // Check if user is SuperAdmin
-            if (!User.IsInRole(UserRole.SuperAdmin.ToString()))
+            if (!User.IsInRole("SuperAdmin"))
             {
                 return Forbid();
             }
@@ -82,7 +84,9 @@ namespace CW_RETAIL.Controllers.Core
                 model.Username, 
                 model.Email, 
                 model.Password, 
-                model.RoleId);
+                model.RoleId,
+                model.FirstName,
+                model.LastName);
 
             if (!result)
             {
@@ -96,16 +100,16 @@ namespace CW_RETAIL.Controllers.Core
         }
         
         // Only SuperAdmin can access this endpoint
-        [HttpPost("set-user-status")]
-        public async Task<IActionResult> SetUserStatus(string userEmail, bool isActive)
+        [HttpPut("set-user-status")]
+        public async Task<IActionResult> SetUserStatus(int userId, bool isActive)
         {
             // Check if user is SuperAdmin
-            if (!User.IsInRole(UserRole.SuperAdmin.ToString()))
+            if (!User.IsInRole("SuperAdmin"))
             {
                 return Forbid();
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
                 return NotFound(new { Message = "User not found" });
@@ -122,7 +126,7 @@ namespace CW_RETAIL.Controllers.Core
 
             // Log the action
             string action = isActive ? "Activate User" : "Deactivate User";
-            await LogAuditAsync(action, $"{action}: {userEmail}");
+            await LogAuditAsync(action, $"{action}: {user.Email}");
 
             return Ok(new { Message = $"User status updated successfully. User is now {(isActive ? "active" : "inactive")}" });
         }
@@ -131,7 +135,7 @@ namespace CW_RETAIL.Controllers.Core
         public async Task<IActionResult> AssignStoreAdmin([FromBody] StoreAdminAssignmentRequest request)
         {
             // Check if user is SuperAdmin
-            if (!User.IsInRole(UserRole.SuperAdmin.ToString()))
+            if (!User.IsInRole("SuperAdmin"))
             {
                 return Forbid();
             }
@@ -172,7 +176,7 @@ namespace CW_RETAIL.Controllers.Core
         public async Task<IActionResult> AssignEmployee(int storeId, string userEmail)
         {
             // Check if user is SuperAdmin or StoreAdmin
-            if (!User.IsInRole(UserRole.SuperAdmin.ToString()) && !User.IsInRole(UserRole.StoreAdmin.ToString()))
+            if (!User.IsInRole("SuperAdmin") && !User.IsInRole("StoreAdmin"))
             {
                 return Forbid();
             }
@@ -184,7 +188,7 @@ namespace CW_RETAIL.Controllers.Core
             }
 
             // If StoreAdmin, check if they are assigned to this store
-            if (User.IsInRole(UserRole.StoreAdmin.ToString()))
+            if (User.IsInRole("StoreAdmin"))
             {
                 var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
                 if (store.StoreAdmin != currentUserEmail)
@@ -237,14 +241,14 @@ namespace CW_RETAIL.Controllers.Core
         public async Task<IActionResult> GetUsers([FromQuery] string role = null)
         {
             // Check if user is SuperAdmin or StoreAdmin
-            if (!User.IsInRole(UserRole.SuperAdmin.ToString()) && !User.IsInRole(UserRole.StoreAdmin.ToString()))
+            if (!User.IsInRole("SuperAdmin") && !User.IsInRole("StoreAdmin"))
             {
                 return Forbid();
             }
 
             var currentUserEmail = User.FindFirstValue(ClaimTypes.Email);
 
-            if (User.IsInRole(UserRole.SuperAdmin.ToString()))
+            if (User.IsInRole("SuperAdmin"))
             {
                 // SuperAdmin can filter by role
                 var query = _context.Users.Include(u => u.Role).AsQueryable();

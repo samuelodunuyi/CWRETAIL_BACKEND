@@ -52,4 +52,4 @@ jobs:
           app-name: 'cwretailbackend'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FFD31C221CF14F7A987007A1CC135CC7 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5BD82C5ED21E47EF8BCFB13A4338C41B }}
